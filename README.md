@@ -19,16 +19,19 @@ For information regarding `empymod` have a look at:
 ## Installation
 
 You can install empyscripts via `conda`
+
 ```bash
 conda install -c prisae empyscripts
 ```
 
 via `pip`:
+
 ```bash
 pip install empyscripts
 ```
 
 or download this repo and run
+
 ```bash
 python setup.py install
 ```

@@ -23,4 +23,4 @@ For `empymod`, see https://empymod.github.io.
 # the License.
 
 # Version
-__version__ = '0.1.0'
+__version__ = '0.1.1'
