@@ -34,6 +34,7 @@ important limitations:
     - `lsrc` == `lrec`              [=> src & rec are assumed in same layer!]
     - Model must have more than 1 layer
     - Electric permittivity and magnetic permeability are isotropic.
+    - Only one frequency at once.
 
 See also the document /docs/TMTEexplanation.pdf.
 
@@ -74,9 +75,9 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
     res : array_like
         Horizontal resistivities rho_h (Ohm.m); #res = #depth + 1.
 
-    freqtime : array_like
-        Frequencies f (Hz). (The name `freqtime` is kept for consistency with
-        `empymod.model.dipole()`.
+    freqtime : float
+        Frequency f (Hz). (The name `freqtime` is kept for consistency with
+        `empymod.model.dipole()`. Only one frequency at once.
 
     aniso : array_like, optional
         Anisotropies lambda = sqrt(rho_v/rho_h) (-); #aniso = #res.
@@ -121,7 +122,7 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
 
     # === 2. CHECK INPUT ============
     # Check layer parameters
-    model = check_model(depth, res, aniso, eperm, None, mperm, None, False,
+    model = check_model(depth, res, aniso, eperm, eperm, mperm, eperm, False,
                         verb)
     depth, res, aniso, epermH, epermV, mpermH, mpermV, _ = model
 
@@ -151,6 +152,11 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
         print("* ERROR   :: model must have more than one layer; " +
               "<depth> provided: "+_strvar(depth[1:]))
         raise ValueError('depth')
+
+    if freq.size > 1:                          # only 1 frequency
+        print("* ERROR   :: only one frequency permitted; " +
+              "<freqtime> provided: "+_strvar(freqtime))
+        raise ValueError('frequency')
 
     # === 3. EM-FIELD CALCULATION ============
     # This part is a simplification of:
@@ -354,10 +360,7 @@ def fields(depth, Rp, Rm, Gam, lrec, lsrc, zsrc, TM):
 
         # Swaps if up=True
         if up:
-            if not last_layer:
-                dp, dm = dm, dp
-            else:
-                dp = dm
+            dp, dm = dm, dp
             Rmp, Rpm = Rpm, Rmp
             first_layer, last_layer = last_layer, first_layer
 
