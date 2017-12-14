@@ -1,13 +1,15 @@
 # empyscripts
 
+[![travis-ci](https://travis-ci.org/empymod/empyscripts.png?branch=master)](https://travis-ci.org/empymod/empyscripts/)
+[![coveralls](https://coveralls.io/repos/github/empymod/empyscripts/badge.svg?branch=master)](https://coveralls.io/github/empymod/empyscripts?branch=master)
+
 This repo contains *add-ons* for `empymod`. These are scripts that did not make
 it into `empymod`. Most likely because they require some sort of change to the
 `empymod` core features, but are only for a very specific use cases. Hence it
 was decided to not implement them in `empymod`.
 
 Please note that these add-ons are not as thoroughly tested as `empymod`, and
-potentially not as well documented either. There are, as of now, also no tests
-for it.
+potentially not as well documented either.
 
 
 ## More information
