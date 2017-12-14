@@ -5,8 +5,10 @@ from scipy.constants import mu_0, epsilon_0
 from empyscripts import tmtemod
 from empymod import kernel, filters, dipole
 
+import empyscripts
+
 # We only check that the summed return values in the functions in tmtemod agree
-# with the corresponding functions from empyod. Nothing more. The examples are
+# with the corresponding functions from empymod. Nothing more. The examples are
 # based on the examples in empymod/tests/create_data.
 
 # Simple model, three frequencies, 6 layers
@@ -20,53 +22,58 @@ etaV = 1/(res*aniso*aniso) + np.outer(2j*np.pi*freq, eperm*epsilon_0)
 zeta = np.outer(2j*np.pi*freq, mperm*mu_0)
 filt = filters.key_201_2012()
 lambd = filt.base/np.array([0.001, 1, 100, 10000])[:, None]
-depth = np.array([-np.infty, 0, 150, 300, 500, 600])
-depth2 = np.r_[depth, 800]
+depth = np.array([-np.infty, 0, 150, 300, 500, 600, 800])
 
 
-# test_dipole switched off, not working yet
-def tst_dipole():
+def test_dipole():
     for lay in [0, 1, 5]:  # Src/rec in first, second, and last layer
-        for f in freq:
-            src = [0, 0, depth2[lay+1]-50]
-            rec = [[0.001, 1, 100, 10000], [0, 0, 0, 0], depth2[lay+1]-10]
-            inp = {'src': src, 'rec': rec, 'depth': depth[1:], 'res': res,
+        for f in freq:  # One freq at a time
+            src = [0, 0, depth[lay+1]-50]
+
+            # Offset depending on frequency
+            if f < 1:
+                rec = [10000, 0, depth[lay+1]-10]
+            elif f > 10:
+                rec = [2, 0, depth[lay+1]-10]
+            else:
+                rec = [1000, 0, depth[lay+1]-10]
+            inp = {'src': src, 'rec': rec, 'depth': depth[1:-1], 'res': res,
                    'freqtime': f, 'aniso': aniso, 'verb': 0}
 
             # empymod-version
-            out1 = dipole(epermH=eperm, epermV=eperm, mpermH=mperm,
+            out = dipole(epermH=eperm, epermV=eperm, mpermH=mperm,
                           mpermV=mperm, xdirect=False, **inp)
 
             # empyscripts-version
-            out2a, out2b = tmtemod.dipole(eperm=eperm, mperm=mperm, **inp)
-            out2a = out2a[0] + out2a[1] + out2a[2] + out2a[3] + out2a[4]
-            out2b = out2b[0] + out2b[1] + out2b[2] + out2b[3] + out2b[4]
+            TM, TE = tmtemod.dipole(eperm=eperm, mperm=mperm, **inp)
+            TM = TM[0] + TM[1] + TM[2] + TM[3] + TM[4]
+            TE = TE[0] + TE[1] + TE[2] + TE[3] + TE[4]
 
             # Check
-            assert_allclose(out1, out2a + out2b, atol=1e-100)
+            assert_allclose(out, TM + TE, rtol=1e-5, atol=1e-50)
 
     # Check the 3 warnings
 
 def test_greenfct():
     for lay in [0, 1, 5]:  # Src/rec in first, second, and last layer
-        inp = {'depth': depth, 'lambd': lambd,
+        inp = {'depth': depth[:-1], 'lambd': lambd,
                'etaH': etaH, 'etaV': etaV,
                'zetaH': zeta, 'zetaV': zeta,
                'lrec': np.array(lay), 'lsrc': np.array(lay),
-               'zsrc': depth2[lay+1]-50, 'zrec': depth2[lay+1]-10}
+               'zsrc': depth[lay+1]-50, 'zrec': depth[lay+1]-10}
 
         # empymod-version
-        out1a, out1b = kernel.greenfct(ab=11, xdirect=False, msrc=False,
-                                    mrec=False, use_ne_eval=False, **inp)
+        out1, out2 = kernel.greenfct(ab=11, xdirect=False, msrc=False,
+                                     mrec=False, use_ne_eval=False, **inp)
 
         # empyscripts-version
-        out2a, out2b = tmtemod.greenfct(**inp)
-        out2a = out2a[0] + out2a[1] + out2a[2] + out2a[3] + out2a[4]
-        out2b = out2b[0] + out2b[1] + out2b[2] + out2b[3] + out2b[4]
+        TM, TE = tmtemod.greenfct(**inp)
+        TM = TM[0] + TM[1] + TM[2] + TM[3] + TM[4]
+        TE = TE[0] + TE[1] + TE[2] + TE[3] + TE[4]
 
         # Check
-        assert_allclose(out1a, out2a, atol=1e-100)
-        assert_allclose(out1b, out2b)
+        assert_allclose(out1, TM, atol=1e-100)
+        assert_allclose(out2, TE)
 
 
 def test_fields():
@@ -75,24 +82,24 @@ def test_fields():
 
     for lay in [0, 1, 5]:  # Src/rec in first, second, and last layer
 
-        inp1 = {'depth': depth, 'e_zH': etaH, 'Gam': Gam,
+        inp1 = {'depth': depth[:-1], 'e_zH': etaH, 'Gam': Gam,
                 'lrec': np.array(lay), 'lsrc': np.array(lay),
                 'use_ne_eval': False}
         Rp1, Rm1 = kernel.reflections(**inp1)
 
-        inp2 = {'depth': depth, 'Gam': Gam, 'Rp': Rp1, 'Rm': Rm1,
+        inp2 = {'depth': depth[:-1], 'Gam': Gam, 'Rp': Rp1, 'Rm': Rm1,
                 'lrec': np.array(lay), 'lsrc': np.array(lay),
-                'zsrc': depth2[lay+1]-50}
+                'zsrc': depth[lay+1]-50}
 
         for TM in [True, False]:
             inp2['TM'] = TM
 
             # empymod-version
-            out1 = kernel.fields(ab=11, use_ne_eval=False, **inp2)
+            out = kernel.fields(ab=11, use_ne_eval=False, **inp2)
 
             # empyscripts-version
-            out2 = tmtemod.fields(**inp2)
+            TMTE = tmtemod.fields(**inp2)
 
             # Check
-            assert_allclose(out1[0], out2[0] + out2[1])
-            assert_allclose(out1[1], out2[2] + out2[3])
+            assert_allclose(out[0], TMTE[0] + TMTE[1])
+            assert_allclose(out[1], TMTE[2] + TMTE[3])

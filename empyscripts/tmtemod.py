@@ -122,7 +122,7 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
 
     # === 2. CHECK INPUT ============
     # Check layer parameters
-    model = check_model(depth, res, aniso, eperm, eperm, mperm, eperm, False,
+    model = check_model(depth, res, aniso, eperm, eperm, mperm, mperm, False,
                         verb)
     depth, res, aniso, epermH, epermV, mpermH, mpermV, _ = model
 
