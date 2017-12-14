@@ -1,11 +1,10 @@
+import pytest
 import numpy as np
 from numpy.testing import assert_allclose
 from scipy.constants import mu_0, epsilon_0
 
 from empyscripts import tmtemod
 from empymod import kernel, filters, dipole
-
-import empyscripts
 
 # We only check that the summed return values in the functions in tmtemod agree
 # with the corresponding functions from empymod. Nothing more. The examples are
@@ -42,7 +41,7 @@ def test_dipole():
 
             # empymod-version
             out = dipole(epermH=eperm, epermV=eperm, mpermH=mperm,
-                          mpermV=mperm, xdirect=False, **inp)
+                         mpermV=mperm, xdirect=False, **inp)
 
             # empyscripts-version
             TM, TE = tmtemod.dipole(eperm=eperm, mperm=mperm, **inp)
@@ -52,10 +51,19 @@ def test_dipole():
             # Check
             assert_allclose(out, TM + TE, rtol=1e-5, atol=1e-50)
 
-    # Check the 3 warnings
+    # Check the 3 errors
+    with pytest.raises(ValueError):  # scr/rec not in same layer
+        tmtemod.dipole([0, 0, 90], [4000, 0, 180], depth[1:-1], res, 1)
+
+    with pytest.raises(ValueError):  # more than one frequency
+        tmtemod.dipole([0, 0, 90], [4000, 0, 110], depth[1:-1], res, [1, 10])
+
+    with pytest.raises(ValueError):  # only one layer
+        tmtemod.dipole([0, 0, 90], [4000, 0, 110], [], 10, 1)
+
 
 def test_greenfct():
-    for lay in [0, 1, 5]:  # Src/rec in first, second, and last layer
+    for lay in [0, 1, 5]:  # src/rec in first, second, and last layer
         inp = {'depth': depth[:-1], 'lambd': lambd,
                'etaH': etaH, 'etaV': etaV,
                'zetaH': zeta, 'zetaV': zeta,
@@ -78,7 +86,7 @@ def test_greenfct():
 
 def test_fields():
     Gam = np.sqrt((etaH/etaV)[:, None, :, None] *
-                    (lambd**2)[None, :, None, :] + (zeta**2)[:, None, :, None])
+                  (lambd**2)[None, :, None, :] + (zeta**2)[:, None, :, None])
 
     for lay in [0, 1, 5]:  # Src/rec in first, second, and last layer
 
