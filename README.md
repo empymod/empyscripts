@@ -41,10 +41,9 @@ python setup.py install
 
 ## Add-ons
 
-- `tmtemod.py`: Return up- and down-going TM/TE-mode contributions for
-  x-directed electric sources and receivers, which are located in the same
-  layer.
-- `fdesign.py`: Design digital linear filters for the Hankel and Fourier
+- `tmtemod`: Return up- and down-going TM/TE-mode contributions for x-directed
+  electric sources and receivers, which are located in the same layer.
+- `fdesign`: Design digital linear filters for the Hankel and Fourier
   transform. (Will be released early 2018.)
 
 
