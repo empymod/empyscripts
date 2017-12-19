@@ -161,20 +161,20 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
     # === 3. EM-FIELD CALCULATION ============
     # This part is a simplification of:
     # - model.fem()
-    # - transform.fht()
+    # - transform.dlf()
     # - kernel.wavenumber()
 
-    # FHT filter we use
-    fhtfilt = key_201_2012()
+    # DLF filter we use
+    filt = key_201_2012()
 
     # 3.1. COMPUTE REQUIRED LAMBDAS for given hankel-filter-base
-    lambd = fhtfilt.base/off[:, None]
+    lambd = filt.base/off[:, None]
 
     # 3.2. CALL THE KERNEL
     PTM, PTE = greenfct(zsrc, zrec, lsrc, lrec, depth, etaH, etaV, zetaH,
                         zetaV, lambd)
 
-    # 3.3. CARRY OUT THE FHT
+    # 3.3. CARRY OUT THE HANKEL TRANSFORM WITH DLF
     factAng = angle_factor(ang, 11, False, False)
     zmfactAng = (factAng[:, np.newaxis]-1)/2
     zpfactAng = (factAng[:, np.newaxis]+1)/2
@@ -182,13 +182,13 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
 
     # TE [uu, ud, du, dd, df]
     for i, val in enumerate(PTE):
-        PTE[i] = (factAng*np.dot(-val, fhtfilt.j1)/off +
-                  np.dot(zmfactAng*val*lambd, fhtfilt.j0))/fact
+        PTE[i] = (factAng*np.dot(-val, filt.j1)/off +
+                  np.dot(zmfactAng*val*lambd, filt.j0))/fact
 
     # TM [uu, ud, du, dd, df]
     for i, val in enumerate(PTM):
-        PTM[i] = (factAng*np.dot(-val, fhtfilt.j1)/off +
-                  np.dot(zpfactAng*val*lambd, fhtfilt.j0))/fact
+        PTM[i] = (factAng*np.dot(-val, filt.j1)/off +
+                  np.dot(zpfactAng*val*lambd, filt.j0))/fact
 
     # 3.4. Remove non-physical contributions
 
