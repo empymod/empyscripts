@@ -66,11 +66,14 @@ for i in ${PYTHON3VERSION[@]}; do
   # Activate venv
   source activate test_3${i}
 
+  # Install flake8
+  pip install pytest-flake8 &> $PRINT
+
   # Install empymod
   conda install -c prisae empymod
 
   # Run tests
-  pytest tests/ --cov=empyscripts
+  pytest tests/ --cov=empyscripts --flake8
 
   # De-activate venv
   source deactivate test_3${i}
