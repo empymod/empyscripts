@@ -215,7 +215,7 @@ def test_print_data(capsys):
     out, _ = capsys.readouterr()
     assert "Filter length   : 201" in out
     assert "Best filter" in out
-    assert "> Min field     : 1.79822e-15" in out
+    assert "> Min field     : 1.79577e-11" in out
     assert "> Spacing       : 0.0641" in out
     assert "> Shift         : -1.2847" in out
     assert "> Base min/max  : 4.552335e-04 / 1.682246e+02" in out
@@ -226,7 +226,7 @@ def test_print_data(capsys):
     out, _ = capsys.readouterr()
     assert "Filter length   : 201" in out
     assert "Best filter" in out
-    assert "> Max r         : 25.5291" in out
+    assert "> Max r         : 21.5443" in out
     assert "> Spacing       : 0.0641" in out
     assert "> Shift         : -1.2847" in out
     assert "> Base min/max  : 4.552335e-04 / 1.682246e+02" in out

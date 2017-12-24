@@ -17,7 +17,7 @@ inp1 = {'spacing': (0.04, 0.1, 10),
         'full_output': True,
         }
 inp2 = dc(inp1)
-inp2['r'] = np.logspace(0, 10, 200)
+inp2['r'] = np.logspace(0, 3, 10)
 inp2['r_def'] = (1, 1, 2)
 inp2['name'] = 'test'
 inp2['finish'] = None
