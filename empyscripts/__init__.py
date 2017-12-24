@@ -6,7 +6,7 @@ information.
 For `empymod`, see https://empymod.github.io.
 
 """
-# Copyright 2017 Dieter Werthmüller
+# Copyright 2017-2018 Dieter Werthmüller
 #
 # This file is part of `empyscripts`.
 #
