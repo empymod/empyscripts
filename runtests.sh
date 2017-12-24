@@ -19,7 +19,7 @@ where:
 CHAN=defaults
 PYTHON3VERSION="4 5 6"
 PRINT="/dev/null"
-PCKGS="numpy scipy python-dateutil setuptools pytest pytest-cov"
+PCKGS="numpy scipy python-dateutil setuptools pytest pytest-cov matplotlib"
 
 # Get Optional Input
 while getopts "hv:cpn" opt; do
@@ -67,13 +67,13 @@ for i in ${PYTHON3VERSION[@]}; do
   source activate test_3${i}
 
   # Install flake8
-  pip install pytest-flake8 &> $PRINT
+  pip install pytest-flake8 pytest-mpl &> $PRINT
 
   # Install empymod
-  conda install -c prisae empymod
+  conda install -y -c prisae empymod &> $PRINT
 
   # Run tests
-  pytest tests/ --cov=empyscripts --flake8
+  pytest tests/ --cov=empyscripts --mpl --flake8
 
   # De-activate venv
   source deactivate test_3${i}

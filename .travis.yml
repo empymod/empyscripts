@@ -19,12 +19,12 @@ install:
   - conda info -a
 
   # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy python-dateutil scipy setuptools pytest pytest-cov
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy python-dateutil scipy matplotlib setuptools pytest pytest-cov
   - source activate test-environment
   - conda install -c prisae empymod
-  - pip install coveralls pytest-flake8
+  - pip install coveralls pytest-flake8 pytest-mpl
   - python setup.py install
 
-script: pytest tests/ --cov=empyscripts --flake8
+script: pytest tests/ --cov=empyscripts --mpl --flake8
 
 after_success: coveralls
