@@ -105,7 +105,7 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
     TM, TE : list of ndarrays, (nfreq, nrec, nsrc)
         Frequency-domain EM field [V/m], separated into
         TM = [TM--, TM-+, TM+-, TM++, TMdirect]
-        and 
+        and
         TE = [TE--, TE-+, TE+-, TE++, TEdirect].
 
         However, source and receiver are normalised. So the source strength is

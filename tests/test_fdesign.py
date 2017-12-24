@@ -21,7 +21,7 @@ def test_design():
     dat1 = DATA['case1'][()]
     filt1, out1 = fdesign.design(fI=fI, verb=0, plot=0, **dat1[0])
     assert_allclose(out1[0], dat1[2][0])
-    assert_allclose(out1[1], dat1[2][1])
+    assert_allclose(out1[1], dat1[2][1], rtol=1e-2)
     assert_allclose(out1[2], dat1[2][2])
     assert_allclose(out1[3], dat1[2][3])
 
@@ -101,7 +101,6 @@ class TestFigures:
     def test_plot_result1(self):
         # plot_result for min amplitude
         dat1 = DATA['case1'][()]
-        plt.style.use('seaborn-notebook')
         fdesign.plot_result(dat1[1], dat1[2], cvar='amp', prntres=True)
         return plt.gcf()
 
@@ -109,7 +108,6 @@ class TestFigures:
     def test_plot_result2(self):
         # plot_result one shift several spacings
         dat5 = DATA['case5'][()]
-        plt.style.use('seaborn-notebook')
         fdesign.plot_result(dat5[1], dat5[2])
         return plt.gcf()
 
@@ -117,49 +115,42 @@ class TestFigures:
     def test_plot_result3(self):
         # plot_result several shifts one spacing for max r
         dat6 = DATA['case6'][()]
-        plt.style.use('seaborn-notebook')
         fdesign.plot_result(dat6[1], dat6[2], cvar='r')
         return plt.gcf()
 
     @pytest.mark.mpl_image_compare
     def test_call_qc_transform_pairs1(self):
         # plot_transform_pair "normal" case
-        r = np.logspace(0, 3, 100)
+        r = np.logspace(1, 2, 50)
         fI = (fdesign.j0_1(5), fdesign.j1_1(5))
         fC = (fdesign.j0_3(5), fdesign.j1_3(5))
         fC[0].rhs = fC[0].rhs(r)
         fC[1].rhs = fC[1].rhs(r)
-        plt.style.use('seaborn-notebook')
-        fdesign._call_qc_transform_pairs(201, (0.06, 0.07, 0.01),
-                                         (-1.5, 0, 0.3), fI, fC, r, (1, 1, 2),
-                                         np.real)
+        fdesign._call_qc_transform_pairs(101, (0.06, 0.07, 0.01), (-1, 1, 0.3),
+                                         fI, fC, r, (0, 0, 2), np.real)
         return plt.gcf()
 
     @pytest.mark.mpl_image_compare
     def test_call_qc_transform_pairs2(self):
         # plot_transform_pair J2
-        r = np.logspace(0, 3, 100)
+        r = np.logspace(1, 2, 50)
         fI = (fdesign.j0_1(5), fdesign.j1_1(5))
         fC = fdesign.empy_hankel('j2', 950, 1000, 1, 1)
         fC.rhs = fC.rhs(r)
-        plt.style.use('seaborn-notebook')
-        fdesign._call_qc_transform_pairs(201, (0.06, 0.07, 0.01),
-                                         (-1.5, 0, 0.3), fI, [fC, ], r,
-                                         (1, 1, 2), np.imag)
+        fdesign._call_qc_transform_pairs(101, (0.06, 0.07, 0.01), (-1, 1, 0.3),
+                                         fI, [fC, ], r, (0, 0, 2), np.imag)
         return plt.gcf()
 
     @pytest.mark.mpl_image_compare
     def test_call_qc_transform_pairs3(self):
         # plot_transform_pair Sine/Cosine
-        r = np.logspace(0, 3, 100)
+        r = np.logspace(1, 2, 50)
         fI = (fdesign.sin_1(), fdesign.cos_1())
         fC = (fdesign.sin_2(), fdesign.cos_2())
         fC[0].rhs = fC[0].rhs(r)
         fC[1].rhs = fC[1].rhs(r)
-        plt.style.use('seaborn-notebook')
-        fdesign._call_qc_transform_pairs(201, (0.06, 0.07, 0.01),
-                                         (-1.5, 0.0, 0.3),
-                                         fI, fC, r, (1, 1, 2), np.imag)
+        fdesign._call_qc_transform_pairs(101, (0.06, 0.07, 0.01), (-1, 1, 0.3),
+                                         fI, fC, r, (0, 0, 2), np.imag)
         return plt.gcf()
 
     @pytest.mark.mpl_image_compare
@@ -179,7 +170,6 @@ class TestFigures:
         rhs = np.dot(f.lhs(k), filt.j0)/r
         rel_error = np.abs((rhs - f.rhs)/f.rhs)
         imin = np.where(rel_error > 0.01)[0][0]
-        plt.style.use('seaborn-notebook')
         fdesign._plot_inversion(f, rhs, r, k, imin, spacing, shift, cvar)
         return plt.gcf()
 
@@ -203,7 +193,6 @@ class TestFigures:
         rhs = rhs0 + rhs1
         rel_error = np.abs((rhs - f.rhs)/f.rhs)
         imin = np.where(rel_error > 0.01)[0][0]
-        plt.style.use('seaborn-notebook')
         fdesign._plot_inversion(f, rhs, r, k, imin, spacing, shift, cvar)
         return plt.gcf()
 
