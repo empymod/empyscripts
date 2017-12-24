@@ -15,30 +15,32 @@ from empyscripts import fdesign
 DATA = np.load(join(dirname(__file__), 'data/fdesign.npz'))
 
 
+# @pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true",
+#                     reason="Skipping this test on Travis CI.")
 def test_design():
     # 1. General case with various spacing and shifts
     fI = (fdesign.j0_1(5), fdesign.j1_1(5))
     dat1 = DATA['case1'][()]
     filt1, out1 = fdesign.design(fI=fI, verb=0, plot=0, **dat1[0])
     assert_allclose(out1[0], dat1[2][0])
-    assert_allclose(out1[1], dat1[2][1])
+    assert_allclose(out1[1], dat1[2][1], rtol=1e-3)
     assert_allclose(out1[2], dat1[2][2])
-    assert_allclose(out1[3], dat1[2][3])
+    assert_allclose(out1[3], dat1[2][3], rtol=1e-3)
 
     # 2. Specific model with only one spacing/shift
     dat2 = DATA['case2'][()]
     filt2, out2 = fdesign.design(fI=fI, verb=0, plot=0, **dat2[0])
     assert_allclose(out2[0], dat2[2][0])
-    assert_allclose(out2[1], dat2[2][1])
+    assert_allclose(out2[1], dat2[2][1], rtol=1e-3)
     assert_allclose(out2[2], dat2[2][2])
-    assert_allclose(out2[3], dat2[2][3])
+    assert_allclose(out2[3], dat2[2][3], rtol=1e-3)
     # 2.b Same, with only one transform
     dat2b = DATA['case2b'][()]
     filt2b, out2b = fdesign.design(fI=fI[0], verb=0, plot=0, **dat2b[0])
     assert_allclose(out2b[0], dat2b[2][0])
-    assert_allclose(out2b[1], dat2b[2][1])
+    assert_allclose(out2b[1], dat2b[2][1], rtol=1e-3)
     assert_allclose(out2b[2], dat2b[2][2])
-    assert_allclose(out2b[3], dat2b[2][3])
+    assert_allclose(out2b[3], dat2b[2][3], rtol=1e-3)
 
     # 3.a Maximize r
     dat3 = DATA['case3'][()]
@@ -46,9 +48,9 @@ def test_design():
     dat3[0]['name'] = 'tmpfilter'
     filt3, out3 = fdesign.design(fI=fI, verb=0, plot=0, **dat3[0])
     assert_allclose(out3[0], dat3[2][0])
-    assert_allclose(out3[1], dat3[2][1])
+    assert_allclose(out3[1], dat3[2][1], rtol=1e-3)
     assert_allclose(out3[2], dat3[2][2])
-    assert_allclose(out3[3], dat3[2][3])
+    assert_allclose(out3[3], dat3[2][3], rtol=1e-3)
     # 3.b Without full output
     dat3[0]['full_output'] = False
     fdesign.design(fI=fI, verb=0, plot=0, **dat3[0])
@@ -61,9 +63,9 @@ def test_design():
     dat4 = DATA['case4'][()]
     filt4, out4 = fdesign.design(fI=fI, verb=3, plot=0, **dat4[0])
     assert_allclose(out4[0], dat4[2][0])
-    assert_allclose(out4[1], dat4[2][1])
+    assert_allclose(out4[1], dat4[2][1], rtol=1e-3)
     assert_allclose(out4[2], dat4[2][2])
-    assert_allclose(out4[3], dat4[2][3])
+    assert_allclose(out4[3], dat4[2][3], rtol=1e-3)
 
     # 5. j2 for fI
     with pytest.raises(ValueError):
