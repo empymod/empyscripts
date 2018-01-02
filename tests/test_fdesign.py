@@ -15,6 +15,8 @@ from empyscripts import fdesign
 DATA = np.load(join(dirname(__file__), 'data/fdesign.npz'))
 
 
+@pytest.mark.skipif("TRAVIS" in os.environ and os.environ["TRAVIS"] == "true",
+                    reason="Skipping this test on Travis CI.")
 def test_design():
     # 1. General case with various spacing and shifts
     fI = (fdesign.j0_1(5), fdesign.j1_1(5))
