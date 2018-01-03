@@ -28,7 +28,7 @@ def test_design():
     # which can yield different results for badly conditioned matrices. This
     # only affects the edge-cases, not the best result we are looking for.
     # However, we have to limit the following comparison on the edges:
-    ii = dat1[2][3] < 1e-2
+    ii = np.maximum.reduce([dat1[2][3], out1[3]]) < 1e-5
     assert_allclose(out1[3][ii], dat1[2][3][ii], rtol=1e-3)
 
     # 2. Specific model with only one spacing/shift
