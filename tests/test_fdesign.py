@@ -24,9 +24,11 @@ def test_design():
     assert_allclose(out1[1], dat1[2][1], rtol=1e-3)
     assert_allclose(out1[2], dat1[2][2])
 
-    # np.linalg.qr seems to be machine specific for edge-cases. Weird. But the
-    # result is different on different PCs.
-    # # assert_allclose(out1[3], dat1[2][3], rtol=1e-3)
+    # np.linalg(.qr) can have roundoff errors which are not deterministic,
+    # which can yield different results for badly conditioned matrices. This
+    # only affects the edge-cases, not the best result we are looking for.
+    # However, we have to limit the following comparison on the edges:
+    assert_allclose(out1[3][2:, :-2], dat1[2][3][2:, :-2], rtol=1e-3)
 
     # 2. Specific model with only one spacing/shift
     dat2 = DATA['case2'][()]
@@ -53,13 +55,22 @@ def test_design():
     assert_allclose(out4[1], dat4[2][1], rtol=1e-3)
     assert_allclose(out4[2], dat4[2][2])
     assert_allclose(out4[3], dat4[2][3], rtol=1e-3)
-    # 4.b Without full output
-    dat4[0]['full_output'] = False
-    fdesign.design(fI=fI, verb=0, plot=0, **dat4[0])
     # Clean-up
     os.remove('./filters/tmpfilter.bak')
     os.remove('./filters/tmpfilter.dat')
     os.remove('./filters/tmpfilter.dir')
+
+    # 4.b Without full output and all the other default inputs
+    dat4[0]['full_output'] = False
+    del dat4[0]['name']
+    dat4[0]['finish'] = 'Wrong input'
+    del dat4[0]['r']
+    dat4[0]['reim'] = np.imag  # Set once to imag
+    fdesign.design(fI=fI, verb=0, plot=0, **dat4[0])
+    # Clean-up
+    os.remove('./filters/dlf_201.bak')
+    os.remove('./filters/dlf_201.dat')
+    os.remove('./filters/dlf_201.dir')
 
     # 5. j2 for fI
     with pytest.raises(ValueError):
