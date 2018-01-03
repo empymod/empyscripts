@@ -73,7 +73,7 @@ for i in ${PYTHON3VERSION[@]}; do
   conda install -y -c prisae empymod &> $PRINT
 
   # Run tests
-  pytest tests/ --cov=empyscripts --mpl --flake8
+  pytest --cov=empyscripts --mpl --flake8
 
   # De-activate venv
   source deactivate test_3${i}
