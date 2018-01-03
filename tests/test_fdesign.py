@@ -106,6 +106,15 @@ def test_load_filter():
 class TestFigures:
 
     @pytest.mark.mpl_image_compare
+    def test_design(self):
+        # check `design` with all verb/plot; actually checked is only last plot
+        dat2 = DATA['case2'][()]
+        dat2[0]['finish'] = True
+        fI = (fdesign.j0_1(5), fdesign.j1_1(5))
+        filt2, out2 = fdesign.design(fI=fI, verb=2, plot=2, **dat2[0])
+        return plt.gcf()
+
+    @pytest.mark.mpl_image_compare
     def test_plot_result1(self):
         # plot_result for min amplitude
         dat1 = DATA['case1'][()]
