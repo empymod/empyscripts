@@ -28,7 +28,8 @@ def test_design():
     # which can yield different results for badly conditioned matrices. This
     # only affects the edge-cases, not the best result we are looking for.
     # However, we have to limit the following comparison on the edges:
-    assert_allclose(out1[3][2:, :-2], dat1[2][3][2:, :-2], rtol=1e-3)
+    ii = dat1[2][3] < 1e-2
+    assert_allclose(out1[3][ii], dat1[2][3][ii], rtol=1e-3)
 
     # 2. Specific model with only one spacing/shift
     dat2 = DATA['case2'][()]
