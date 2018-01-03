@@ -67,7 +67,7 @@ def test_design():
     dat4[0]['finish'] = 'Wrong input'
     del dat4[0]['r']
     dat4[0]['reim'] = np.imag  # Set once to imag
-    fdesign.design(fI=fI, verb=0, plot=0, **dat4[0])
+    fdesign.design(fI=fI, verb=2, plot=0, **dat4[0])
     # Clean-up
     os.remove('./filters/dlf_201.bak')
     os.remove('./filters/dlf_201.dat')
@@ -106,16 +106,13 @@ def test_load_filter():
 class TestFigures:
 
     @pytest.mark.mpl_image_compare
-    def test_design(self):
-        # check `design` with all verb/plot; actually checked is only last plot
-        dat2 = DATA['case2'][()]
-        dat2[0]['finish'] = True
-        fI = (fdesign.j0_1(5), fdesign.j1_1(5))
-        filt2, out2 = fdesign.design(fI=fI, verb=2, plot=2, **dat2[0])
-        return plt.gcf()
-
-    @pytest.mark.mpl_image_compare
     def test_plot_result1(self):
+        # Quick run `design` with all verb/plot on, just to check that no
+        # errors occur. Actually plots are checked in test below and the other
+        # tests.
+        dat2 = DATA['case2'][()]
+        fdesign.design(fI=fdesign.j0_1(5), verb=2, plot=2, **dat2[0])
+
         # plot_result for min amplitude
         dat1 = DATA['case1'][()]
         fdesign.plot_result(dat1[1], dat1[2], cvar='amp', prntres=True)
