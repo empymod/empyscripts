@@ -1,10 +1,10 @@
 # Changelog
 
-## latest
+## v0.2.0 - *2018-01-09*
 
-* [2017-12-23] Add add-on `fdesign`.
-* [2017-12-14] Add tests and TravisCI, coveralls.
+* New add-on `fdesign`.
+* Now has tests and TravisCI, coveralls integration.
 
-## v0.1.0 - *2017-09-22*
+## v0.1.1 - *2017-09-22*
 
 * Initial release.
