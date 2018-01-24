@@ -45,6 +45,8 @@ python setup.py install
   electric sources and receivers, which are located in the same layer.
 - `fdesign`: Design digital linear filters for the Hankel and Fourier
   transforms.
+- `printinfo`: Small tool to show version information (in Jupyter notebooks,
+  IPython terminals, and standard Python terminals).
 
 
 ## License

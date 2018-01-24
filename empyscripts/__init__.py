@@ -22,5 +22,9 @@ For `empymod`, see https://empymod.github.io.
 # License for the specific language governing permissions and limitations under
 # the License.
 
+from .printinfo import versions
+
+__all__ = ['versions']
+
 # Version
 __version__ = '0.2.1dev0'
