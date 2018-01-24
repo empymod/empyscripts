@@ -1,4 +1,6 @@
-"""Digital linear filter (DLF) design
+"""
+Add-on for `empymod`: digital linear filter (DLF) design
+========================================================
 
 The add-on fdesign can be used to design digital linear filters for the Hankel
 or Fourier transform, or for any linear transform ([Gosh_1970]_). For this

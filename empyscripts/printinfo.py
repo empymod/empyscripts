@@ -1,8 +1,18 @@
 """
-Utility to print date, time, and version information.
+Add-on for `empymod`: tools to print date, time, and version information
+========================================================================
 
-Script checks, whether it is called from a Jupyter notebook or not. If not,
-then `versions()` calls versions_rawtxt`.
+Print date, time, and package version information in any environment (Jupyter
+notebook, IPython console, Python console, QT console).
+
+    - versions : Print a nice html-table in a Jupyter notebook. If it is called
+                 from an IPython console or a Python console then it calls
+                 `versions_rawtxt`. This does not work in a QT console, as it
+                 returns a HTML object which cannot be rendered. Use
+                 `versions_rawtxt` in QT consoles.
+
+    - versions_rawtxt : Print information to stdout in plain text. Works for
+                        all environments.
 
 This script was heavily inspired by:
 
@@ -16,6 +26,7 @@ import sys
 import time
 import numpy
 import scipy
+import textwrap
 import platform
 import multiprocessing
 
@@ -38,17 +49,22 @@ try:
     from IPython.display import HTML
     # Check if Jupyter is used or another IPython instance (e.g., terminal)
     # https://github.com/ipython/ipython/issues/9732#issuecomment-231592556
-    no_HTML = not IPython.get_ipython().has_trait('kernel')
+    ip = IPython.get_ipython()
+    if ip:
+        no_HTML = not ip.has_trait('kernel')
+    else:
+        no_HTML = True
 except ImportError:
     IPython = False
     no_HTML = True
 
 
 def versions(add_pckg=[]):
-    """Return date and version information in Jupyter as a html table.
+    """Return date, time, and version information in Jupyter as a html table.
 
-    If calld from a non-Jupyter environment, it will run
-    `versions_rawtxt(add_pckg)` instead.
+    Works for Jupyter notebooks. If called from Ipython or Python consoles,
+    it will run `versions_rawtxt(add_pckg)` instead. DOES NOT work in QT
+    consoles, use `versions_rawtxt(add_pckg)`.
 
 
     Parameters
@@ -87,7 +103,7 @@ def versions(add_pckg=[]):
         return
 
     # Get required modules
-    pckgs = get_modules(add_pckg)
+    pckgs = _get_modules(add_pckg)
 
     # Define styles
     style1 = " style='border: 2px solid #fff; text-align: left;'"
@@ -136,14 +152,20 @@ def versions(add_pckg=[]):
 
 
 def versions_rawtxt(add_pckg=[]):
-    """Print date and version information."""
+    """Print date, time, and version information in plain text.
+
+    Works for any environment
+    """
+
+    # width
+    n = 54
 
     # Get required modules
-    pckgs = get_modules(add_pckg)
+    pckgs = _get_modules(add_pckg)
 
     # Print date and time info as title
     print(time.strftime('\n  %a %b %d %H:%M:%S %Y %Z'))
-    print(54*'-')
+    print(n*'-')
 
     # OS and CPUs
     print('{:>15}'.format(platform.system())+' : OS')
@@ -154,21 +176,20 @@ def versions_rawtxt(add_pckg=[]):
         print('{:>15}'.format(pckg.__version__)+' : '+pckg.__name__)
 
     # sys.version
-    import textwrap
     print()
-    for txt in textwrap.wrap(sys.version, 50):
-        print(' ', txt)
-    print()
+    for txt in textwrap.wrap(sys.version, n-4):
+        print('  '+txt)
 
     # vml version
     if numexpr:
-        for txt in textwrap.wrap(numexpr.get_vml_version(), 50):
-            print(' ', txt)
+        print()
+        for txt in textwrap.wrap(numexpr.get_vml_version(), n-4):
+            print('  '+txt)
 
-    print(54*'-')
+    print(n*'-')
 
 
-def get_modules(add_pckg):
+def _get_modules(add_pckg):
     """Create list of modules."""
 
     # Cast add_pckg
