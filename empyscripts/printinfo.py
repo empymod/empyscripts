@@ -59,18 +59,25 @@ except ImportError:
     no_HTML = True
 
 
-def versions(add_pckg=[]):
+def versions(add_pckg=[], ncol=3):
     """Return date, time, and version information in Jupyter as a html table.
 
     Works for Jupyter notebooks. If called from Ipython or Python consoles,
     it will run `versions_rawtxt(add_pckg)` instead. DOES NOT work in QT
     consoles, use `versions_rawtxt(add_pckg)`.
 
+    In a notebook, you can get the plain rendered html-code with
+
+        out = empyscripts.versions(ncol=3)
+        print(out.data)
+
 
     Parameters
     ----------
     add_pckg : modules, optional
         Module or list of modules to add to output information.
+    ncol : int, optional
+        Number of package-columns in html table. Defaults to 3.
 
 
     Returns
@@ -109,41 +116,47 @@ def versions(add_pckg=[]):
     style1 = " style='border: 2px solid #fff; text-align: left;'"
     style2 = " style='background-color: #ccc; border: 2px solid #fff;'"
 
+    # New column
+    def newcol(i, ncol, html):
+        if i % ncol == 0:
+            html += "  </tr>\n"
+            html += "  <tr" + style1 + ">\n"
+        return i+1, html
+
     # Print date and time info as title
-    html = "<h3>%s</h3>" % time.strftime('%a %b %d %H:%M:%S %Y %Z')
+    html = "<h3>%s</h3>\n" % time.strftime('%a %b %d %H:%M:%S %Y %Z')
 
     # Start table
-    html += '<table>'
+    html += '<table>\n'
 
     # OS and CPUs
-    html += "<tr" + style1 + ">"
-    html += "<td" + style2 + ">%s</td>" % platform.system()
-    html += "<td" + style1 + ">OS</td>"
-    html += "<td" + style2 + ">%s</td>" % multiprocessing.cpu_count()
-    html += "<td" + style1 + ">CPU(s)</td>"
-    i = 2
+    html += "  <tr" + style1 + ">\n"
+    html += "    <td" + style2 + ">%s</td>\n" % platform.system()
+    html += "    <td" + style1 + ">OS</td>\n"
+    i, html = newcol(1, ncol, html)
+    html += "    <td" + style2 + ">%s</td>\n" % multiprocessing.cpu_count()
+    html += "    <td" + style1 + ">CPU(s)</td>\n"
 
     # Loop over packages
     for pckg in pckgs:
-        html += "<td" + style2 + ">%s</td>" % pckg.__version__
-        html += "<td" + style1 + ">"+pckg.__name__+"</td>"
-        i += 1
-        if i % 3 == 0:
-            html += "</tr>"
-            html += "<tr" + style1 + ">"
-    html += "</tr>"
+        i, html = newcol(i, ncol, html)
+        html += "    <td" + style2 + ">%s</td>\n" % pckg.__version__
+        html += "    <td" + style1 + ">"+pckg.__name__+"</td>\n"
+    html += "  </tr>\n"
 
     # sys.version
-    html += "<tr" + style1 + ">"
-    html += "<td" + style1 + " colspan='6'>%s</td>" % sys.version
-    html += "</tr>"
+    html += "  <tr" + style1 + ">\n"
+    html += "     <td" + style1 + " colspan='"
+    html += str(2*ncol)+"'>%s</td>\n" % sys.version
+    html += "  </tr>\n"
 
     # vml version
     if numexpr:
-        html += "<tr" + style2 + ">"
-        html += "<td" + style2
-        html += " colspan='6'>%s</td>" % numexpr.get_vml_version()
-        html += "</tr>"
+        html += "  <tr" + style2 + ">\n"
+        html += "    <td" + style2[:-2]
+        html += "; text-align: left;' colspan='" + str(2*ncol)
+        html += "'>%s</td>\n" % numexpr.get_vml_version()
+        html += "  </tr>\n"
 
     # Finish table
     html += "</table>"
