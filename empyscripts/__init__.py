@@ -29,4 +29,4 @@ from .printinfo import versions
 __all__ = ['tmtemod', 'fdesign', 'versions']
 
 # Version
-__version__ = '0.3.0'
+__version__ = '0.3.1dev0'

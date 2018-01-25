@@ -9,7 +9,7 @@ except(IOError, ImportError):
 
 setup(
     name='empyscripts',
-    version='0.3.0',
+    version='0.3.1dev0',
     description='Add-ons for empymod',
     long_description=readme,
     author='Dieter Werthmüller',
