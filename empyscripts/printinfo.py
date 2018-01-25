@@ -2,9 +2,9 @@
 Add-on for `empymod`: tools to print date, time, and version information
 ========================================================================
 
-Print date, time, and package version information in any environment (Jupyter
-notebook, IPython console, Python console, QT console), either as html-table
-(notebook) or as plain text (anywhere).
+Print or return date, time, and package version information in any environment
+(Jupyter notebook, IPython console, Python console, QT console), either as
+html-table (notebook) or as plain text (anywhere).
 
 This script was heavily inspired by:
 
@@ -28,6 +28,11 @@ import empyscripts
 
 # Optional modules
 try:
+    import IPython
+    from IPython.display import HTML, Pretty
+except ImportError:
+    IPython = False
+try:
     import matplotlib
 except ImportError:
     matplotlib = False
@@ -36,40 +41,38 @@ try:
 except ImportError:
     numexpr = False
 
-# Check if IPython is installed
-try:
-    import IPython
-    from IPython.display import HTML
-except ImportError:
-    IPython = False
 
-
-def versions(add_pckg=[], mode='auto', ncol=3):
+def versions(mode='print', add_pckg=[], ncol=3):
     """Return date, time, and version information.
 
-    Prints a nice table if called from a Jupyter notebook. If called from
-    Ipython or Python consoles, it will print the information as plain text.
-    For QT consoles, use `mode='text'`, as it cannot be distinguished from a
-    Jupyter notebook, but cannot render html.
+    Print or return date, time, and package version information in any
+    environment (Jupyter notebook, IPython console, Python console, QT
+    console), either as html-table (notebook) or as plain text (anywhere).
+
+    This script was heavily inspired by:
+
+        - ipynbtools.py from qutip https://github.com/qutip
+        - watermark.py from https://github.com/rasbt/watermark
 
     Parameters
     ----------
+    mode : string, optional; {<'print'>, 'HTML', 'Pretty', 'plain', 'html'}
+        Defaults to 'print':
+            - 'print': Prints text-version to stdout, nothing returned.
+            - 'HTML': Returns html-version as IPython.display.HTML(html).
+            - 'html': Returns html-version as plain text.
+            - 'Pretty': Returns text-version as IPython.display.Pretty(text).
+            - 'plain': Returns text-version as plain text.
+
+        'HTML' and 'Pretty' require IPython.
+
     add_pckg : packages, optional
         Package or list of packages to add to output information (must be
         imported beforehand).
 
-    mode : string, optional; {<'auto'>, 'text', 'html'}
-        Defaults to 'auto':
-            - 'auto': Returns HTML(html) for Jupyter notebooks, and text for
-                      IPython and Python consoles. Unfortunately, returns
-                      HTML(html) for QT consoles.
-            - 'text': Forces plain-text version. Good for QT consoles.
-            - 'html': Returns html instead of HTML(html).
-            - 'plain': Returns text instead of print(text).
-
     ncol : int, optional
-        Number of package-columns in html table (therefore only affects the
-        html version, not the plain-text version). Defaults to 3.
+        Number of package-columns in html table; only has effect if
+        `mode='HTML'` or `mode='html'`. Defaults to 3.
 
 
     Returns
@@ -88,17 +91,14 @@ def versions(add_pckg=[], mode='auto', ncol=3):
     >>> versions()
 
     Provide additional package
-    >>> versions(pytest, mode='text')
+    >>> versions('plain', pytest)
 
     Provide additional packages
-    >>> versions([pytest, dateutil], ncol=5)
+    >>> versions('HTML', [pytest, dateutil], ncol=5)
 
     """
     # Check ncol
     ncol = int(ncol)
-
-    # Check HTML with mode
-    no_HTML = _check_html_mode(mode)
 
     # Get packages
     pckgs = _get_packages(add_pckg)
@@ -108,11 +108,12 @@ def versions(add_pckg=[], mode='auto', ncol=3):
         return _get_html(pckgs, ncol)
     elif mode == 'plain':
         return _get_text(pckgs)
+    elif mode == 'Pretty' and IPython:
+        return Pretty(_get_text(pckgs))
+    elif mode == 'HTML' and IPython:
+        return HTML(_get_html(pckgs, ncol))
     else:
-        if no_HTML:
-            print(_get_text(pckgs))
-        else:
-            return HTML(_get_html(pckgs, ncol))
+        print(_get_text(pckgs))
 
 
 def _get_html(pckgs, ncol):
@@ -224,25 +225,3 @@ def _get_packages(add_pckg):
     pckgs += add_pckg  # Add the ones from the input
 
     return pckgs
-
-
-def _check_html_mode(mode):
-    """Check HTML and mode."""
-
-    # Check mode, IPython, and no_html
-    if mode == 'auto':
-        # Check if Jupyter is used or another IPython instance (e.g., terminal)
-        # https://github.com/ipython/ipython/issues/9732#issuecomment-231592556
-        # Unfortunately, cannot distinguish between Jupyter and Qt console.
-        if IPython:
-            ip = IPython.get_ipython()
-            if ip:
-                no_HTML = not ip.has_trait('kernel')
-            else:
-                no_HTML = True
-        else:
-            no_HTML = True
-    else:
-        no_HTML = True
-
-    return no_HTML

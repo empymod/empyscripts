@@ -1,6 +1,6 @@
 import pytest
 
-from empyscripts import versions, printinfo
+from empyscripts import versions
 
 # Note: Tests assume that there is no IPython in the test environment.
 
@@ -8,7 +8,7 @@ from empyscripts import versions, printinfo
 def test_versions(capsys):
 
     # Check the 'auto'-version, providing a package
-    versions(pytest)
+    versions(add_pckg=pytest)
     out1, _ = capsys.readouterr()
 
     # Check one of the standard packages
@@ -18,14 +18,14 @@ def test_versions(capsys):
     assert pytest.__version__ + ' : pytest' in out1
 
     # Check the 'text'-version, providing a package as tuple
-    versions((pytest,), mode='text')
+    versions('print', add_pckg=(pytest, ))
     out2, _ = capsys.readouterr()
 
     # They have to be the same, except time (run at slightly different times)
     assert out1[:-50] == out2[:-50]
 
     # Check the 'plain'-version, providing a package as list
-    out3 = versions([pytest, ], mode='plain')
+    out3 = versions('plain', add_pckg=[pytest, ])
 
     # Check one of the standard packages
     assert 'numpy' in out3
@@ -34,7 +34,7 @@ def test_versions(capsys):
     assert pytest.__version__ + ' : pytest' in out3
 
     # Check html-version, providing a package as a list
-    out4 = versions([pytest], mode='html')
+    out4 = versions('html', add_pckg=[pytest])
 
     # Check row of provided package, with number
     teststr = "<td style='background-color: #ccc; border: 2px solid #fff;'>"
@@ -42,11 +42,3 @@ def test_versions(capsys):
     teststr += "</td>\n    <td style='"
     teststr += "border: 2px solid #fff; text-align: left;'>pytest</td>"
     assert teststr in out4
-
-
-def test_check_html_mode():
-    out1 = printinfo._check_html_mode('auto')
-    assert out1 is True
-
-    out2 = printinfo._check_html_mode('something')
-    assert out2 is True
