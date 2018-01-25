@@ -54,6 +54,8 @@ def versions(mode='print', add_pckg=[], ncol=3):
         - ipynbtools.py from qutip https://github.com/qutip
         - watermark.py from https://github.com/rasbt/watermark
 
+    This is a wrapper for `versions_html` and `versions_text`.
+
     Parameters
     ----------
     mode : string, optional; {<'print'>, 'HTML', 'Pretty', 'plain', 'html'}
@@ -97,27 +99,26 @@ def versions(mode='print', add_pckg=[], ncol=3):
     >>> versions('HTML', [pytest, dateutil], ncol=5)
 
     """
+    if mode == 'html':
+        return versions_html(add_pckg, ncol)
+    elif mode == 'plain':
+        return versions_text(add_pckg)
+    elif mode == 'Pretty' and IPython:
+        return Pretty(versions_text(add_pckg))
+    elif mode == 'HTML' and IPython:
+        return HTML(versions_html(add_pckg, ncol))
+    else:
+        print(versions_text(add_pckg))
+
+
+def versions_html(add_pckg=[], ncol=3):
+    """HTML version.
+
+    See `versions` for details.
+    """
+
     # Check ncol
     ncol = int(ncol)
-
-    # Get packages
-    pckgs = _get_packages(add_pckg)
-
-    # Print text or return html
-    if mode == 'html':
-        return _get_html(pckgs, ncol)
-    elif mode == 'plain':
-        return _get_text(pckgs)
-    elif mode == 'Pretty' and IPython:
-        return Pretty(_get_text(pckgs))
-    elif mode == 'HTML' and IPython:
-        return HTML(_get_html(pckgs, ncol))
-    else:
-        print(_get_text(pckgs))
-
-
-def _get_html(pckgs, ncol):
-    """HTML version."""
 
     # Define html-styles
     style1 = " style='border: 2px solid #fff; text-align: left;'"
@@ -153,7 +154,7 @@ def _get_html(pckgs, ncol):
     html, i = cols(html, multiprocessing.cpu_count(), 'CPU(s)', ncol, i)
 
     # Loop over packages
-    for pckg in pckgs:
+    for pckg in _get_packages(add_pckg):
         html, i = cols(html, pckg.__version__, pckg.__name__, ncol, i)
     html += "  </tr>\n"
 
@@ -173,8 +174,11 @@ def _get_html(pckgs, ncol):
     return html
 
 
-def _get_text(pckgs):
-    """Plain-text version."""
+def versions_text(add_pckg=[]):
+    """Plain-text version.
+
+    See `versions` for details.
+    """
 
     # Width for text-version
     n = 54
@@ -185,7 +189,7 @@ def _get_text(pckgs):
     text += '{:>15}'.format(multiprocessing.cpu_count())+' : CPU(s)\n'
 
     # Loop over packages
-    for pckg in pckgs:
+    for pckg in _get_packages(add_pckg):
         text += '{:>15} : {}\n'.format(pckg.__version__, pckg.__name__)
 
     # sys.version
@@ -214,6 +218,7 @@ def _get_packages(add_pckg):
     # Cast add_pckg
     if isinstance(add_pckg, tuple):
         add_pckg = list(add_pckg)
+
     if not isinstance(add_pckg, list):
         add_pckg = [add_pckg, ]
 

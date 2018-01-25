@@ -1,6 +1,6 @@
 import pytest
 
-from empyscripts import versions
+from empyscripts import versions, printinfo
 
 # Note: Tests assume that there is no IPython in the test environment.
 
@@ -26,6 +26,10 @@ def test_versions(capsys):
 
     # Check the 'plain'-version, providing a package as list
     out3 = versions('plain', add_pckg=[pytest, ])
+    out3b = printinfo.versions_text(add_pckg=[pytest, ])
+
+    # They have to be the same, except time (run at slightly different times)
+    assert out3[:-50] == out3b[:-50]
 
     # Check one of the standard packages
     assert 'numpy' in out3
@@ -35,6 +39,10 @@ def test_versions(capsys):
 
     # Check html-version, providing a package as a list
     out4 = versions('html', add_pckg=[pytest])
+    out4b = printinfo.versions_html(add_pckg=[pytest])
+
+    # They have to be the same, except time (run at slightly different times)
+    assert out4[:-50] == out4b[:-50]
 
     # Check row of provided package, with number
     teststr = "<td style='background-color: #ccc; border: 2px solid #fff;'>"
