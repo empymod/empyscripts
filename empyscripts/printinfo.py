@@ -3,16 +3,8 @@ Add-on for `empymod`: tools to print date, time, and version information
 ========================================================================
 
 Print date, time, and package version information in any environment (Jupyter
-notebook, IPython console, Python console, QT console).
-
-    - versions : Print a nice html-table in a Jupyter notebook. If it is called
-                 from an IPython console or a Python console then it calls
-                 `versions_rawtxt`. This does not work in a QT console, as it
-                 returns a HTML object which cannot be rendered. Use
-                 `versions_rawtxt` in QT consoles.
-
-    - versions_rawtxt : Print information to stdout in plain text. Works for
-                        all environments.
+notebook, IPython console, Python console, QT console), either as html-table
+(notebook) or as plain text (anywhere).
 
 This script was heavily inspired by:
 
@@ -30,6 +22,7 @@ import textwrap
 import platform
 import multiprocessing
 
+# empymod
 import empymod
 import empyscripts
 
@@ -47,44 +40,41 @@ except ImportError:
 try:
     import IPython
     from IPython.display import HTML
-    # Check if Jupyter is used or another IPython instance (e.g., terminal)
-    # https://github.com/ipython/ipython/issues/9732#issuecomment-231592556
-    ip = IPython.get_ipython()
-    if ip:
-        no_HTML = not ip.has_trait('kernel')
-    else:
-        no_HTML = True
 except ImportError:
     IPython = False
-    no_HTML = True
 
 
-def versions(add_pckg=[], ncol=3):
-    """Return date, time, and version information in Jupyter as a html table.
+def versions(add_pckg=[], mode='auto', ncol=3):
+    """Return date, time, and version information.
 
-    Works for Jupyter notebooks. If called from Ipython or Python consoles,
-    it will run `versions_rawtxt(add_pckg)` instead. DOES NOT work in QT
-    consoles, use `versions_rawtxt(add_pckg)`.
-
-    In a notebook, you can get the plain rendered html-code with
-
-        out = empyscripts.versions(ncol=3)
-        print(out.data)
-
+    Prints a nice table if called from a Jupyter notebook. If called from
+    Ipython or Python consoles, it will print the information as plain text.
+    For QT consoles, use `mode='text'`, as it cannot be distinguished from a
+    Jupyter notebook, but cannot render html.
 
     Parameters
     ----------
-    add_pckg : modules, optional
-        Module or list of modules to add to output information.
+    add_pckg : packages, optional
+        Package or list of packages to add to output information (must be
+        imported beforehand).
+
+    mode : string, optional; {<'auto'>, 'text', 'html'}
+        Defaults to 'auto':
+            - 'auto': Returns HTML(html) for Jupyter notebooks, and text for
+                      IPython and Python consoles. Unfortunately, returns
+                      HTML(html) for QT consoles.
+            - 'text': Forces plain-text version. Good for QT consoles.
+            - 'html': Returns html instead of HTML(html).
+            - 'plain': Returns text instead of print(text).
+
     ncol : int, optional
-        Number of package-columns in html table. Defaults to 3.
+        Number of package-columns in html table (therefore only affects the
+        html version, not the plain-text version). Defaults to 3.
 
 
     Returns
     -------
-    A `IPython.display.HTML`-object, which is rendered in the notebook. If
-    called from something else than a notebook, the output is directly printed
-    to stdout.
+    Depends on `mode`:
 
 
     Examples
@@ -104,42 +94,57 @@ def versions(add_pckg=[], ncol=3):
 
     """
 
-    # Call rawtxt if not in jupyter notebook
-    if no_HTML:
-        versions_rawtxt(add_pckg)
-        return
+    # Check HTML with mode
+    no_HTML = _check_html_mode(mode)
 
-    # Get required modules
-    pckgs = _get_modules(add_pckg)
+    # Get packages
+    pckgs = _get_packages(add_pckg)
 
-    # Define styles
+    # Print text or return html
+    if mode == 'html':
+        return _get_html(pckgs, ncol)
+    elif mode == 'plain':
+        return _get_text(pckgs)
+    else:
+        if no_HTML:
+            print(_get_text(pckgs))
+        else:
+            return HTML(_get_html(pckgs, ncol))
+
+
+def _get_html(pckgs, ncol):
+    """HTML version."""
+
+    # Define html-styles
     style1 = " style='border: 2px solid #fff; text-align: left;'"
     style2 = " style='background-color: #ccc; border: 2px solid #fff;'"
 
-    # New column
-    def newcol(i, ncol, html):
+    # Create new html-row
+    def newrow(i, ncol, html):
+        """Create new raw after ncol entries."""
         if i % ncol == 0:
             html += "  </tr>\n"
             html += "  <tr" + style1 + ">\n"
         return i+1, html
 
-    # Print date and time info as title
-    html = "<h3>%s</h3>\n" % time.strftime('%a %b %d %H:%M:%S %Y %Z')
+    # Date and time info as title
+    date_time_info = time.strftime('%a %b %d %H:%M:%S %Y %Z')
+    html = "<h3>%s</h3>\n" % date_time_info
 
-    # Start table
+    # Start html-table
     html += '<table>\n'
 
     # OS and CPUs
     html += "  <tr" + style1 + ">\n"
     html += "    <td" + style2 + ">%s</td>\n" % platform.system()
     html += "    <td" + style1 + ">OS</td>\n"
-    i, html = newcol(1, ncol, html)
+    i, html = newrow(1, ncol, html)
     html += "    <td" + style2 + ">%s</td>\n" % multiprocessing.cpu_count()
     html += "    <td" + style1 + ">CPU(s)</td>\n"
 
     # Loop over packages
     for pckg in pckgs:
-        i, html = newcol(i, ncol, html)
+        i, html = newrow(i, ncol, html)
         html += "    <td" + style2 + ">%s</td>\n" % pckg.__version__
         html += "    <td" + style1 + ">"+pckg.__name__+"</td>\n"
     html += "  </tr>\n"
@@ -161,49 +166,46 @@ def versions(add_pckg=[], ncol=3):
     # Finish table
     html += "</table>"
 
-    return HTML(html)
+    return html
 
 
-def versions_rawtxt(add_pckg=[]):
-    """Print date, time, and version information in plain text.
+def _get_text(pckgs):
+    """Plain-text version."""
 
-    Works for any environment
-    """
-
-    # width
+    # Width for text-version
     n = 54
 
-    # Get required modules
-    pckgs = _get_modules(add_pckg)
-
-    # Print date and time info as title
-    print(time.strftime('\n  %a %b %d %H:%M:%S %Y %Z'))
-    print(n*'-')
+    # Date and time info as title
+    date_time_info = time.strftime('%a %b %d %H:%M:%S %Y %Z')
+    text = "\n  " + date_time_info + "\n" + n*'-' + '\n'
 
     # OS and CPUs
-    print('{:>15}'.format(platform.system())+' : OS')
-    print('{:>15}'.format(multiprocessing.cpu_count())+' : CPU(s)')
+    text += '{:>15}'.format(platform.system())+' : OS\n'
+    text += '{:>15}'.format(multiprocessing.cpu_count())+' : CPU(s)\n'
 
     # Loop over packages
     for pckg in pckgs:
-        print('{:>15}'.format(pckg.__version__)+' : '+pckg.__name__)
+        text += '{:>15} : {}\n'.format(pckg.__version__, pckg.__name__)
 
     # sys.version
-    print()
+    text += '\n'
     for txt in textwrap.wrap(sys.version, n-4):
-        print('  '+txt)
+        text += '  '+txt+'\n'
 
     # vml version
     if numexpr:
-        print()
+        text += '\n'
         for txt in textwrap.wrap(numexpr.get_vml_version(), n-4):
-            print('  '+txt)
+            text += '  '+txt+'\n'
 
-    print(n*'-')
+    # Finish
+    text += n*'-'
+
+    return text
 
 
-def _get_modules(add_pckg):
-    """Create list of modules."""
+def _get_packages(add_pckg):
+    """Create list of packages."""
 
     # Cast add_pckg
     if isinstance(add_pckg, tuple):
@@ -219,3 +221,25 @@ def _get_modules(add_pckg):
     pckgs += add_pckg  # Add the ones from the input
 
     return pckgs
+
+
+def _check_html_mode(mode):
+    """Check HTML and mode."""
+
+    # Check mode, IPython, and no_html
+    if mode == 'auto':
+        # Check if Jupyter is used or another IPython instance (e.g., terminal)
+        # https://github.com/ipython/ipython/issues/9732#issuecomment-231592556
+        # Unfortunately, cannot distinguish between Jupyter and Qt console.
+        if IPython:
+            ip = IPython.get_ipython()
+            if ip:
+                no_HTML = not ip.has_trait('kernel')
+            else:
+                no_HTML = True
+        else:
+            no_HTML = True
+    else:
+        no_HTML = True
+
+    return no_HTML
