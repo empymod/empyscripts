@@ -74,7 +74,8 @@ def versions(add_pckg=[], mode='auto', ncol=3):
 
     Returns
     -------
-    Depends on `mode`:
+    Depending on `mode` (HTML-instance; plain text; html as plain text; or
+    nothing, only printing to stdout).
 
 
     Examples
@@ -87,12 +88,14 @@ def versions(add_pckg=[], mode='auto', ncol=3):
     >>> versions()
 
     Provide additional package
-    >>> versions(pytest)
+    >>> versions(pytest, mode='text')
 
     Provide additional packages
-    >>> versions([pytest, dateutil])
+    >>> versions([pytest, dateutil], ncol=5)
 
     """
+    # Check ncol
+    ncol = int(ncol)
 
     # Check HTML with mode
     no_HTML = _check_html_mode(mode)
@@ -119,49 +122,49 @@ def _get_html(pckgs, ncol):
     style1 = " style='border: 2px solid #fff; text-align: left;'"
     style2 = " style='background-color: #ccc; border: 2px solid #fff;'"
 
-    # Create new html-row
-    def newrow(i, ncol, html):
-        """Create new raw after ncol entries."""
-        if i % ncol == 0:
+    def colspan(html, txt, ncol):
+        """Print txt in a row spanning whole table."""
+        html += "  <tr>\n"
+        html += "     <td" + style1 + " colspan='"
+        html += str(2*ncol)+"'>%s</td>\n" % txt
+        html += "  </tr>\n"
+        return html
+
+    def cols(html, version, name, ncol, i):
+        """Print package information in two cells."""
+
+        # Check if we have to start a new row
+        if i > 0 and i % ncol == 0:
             html += "  </tr>\n"
             html += "  <tr" + style1 + ">\n"
-        return i+1, html
 
-    # Date and time info as title
-    date_time_info = time.strftime('%a %b %d %H:%M:%S %Y %Z')
-    html = "<h3>%s</h3>\n" % date_time_info
+        html += "    <td" + style2 + ">%s</td>\n" % version
+        html += "    <td" + style1 + ">%s</td>\n" % name
+
+        return html, i+1
 
     # Start html-table
-    html += '<table>\n'
+    html = "<table style='border: 3px solid #ddd;'>\n"
 
     # OS and CPUs
-    html += "  <tr" + style1 + ">\n"
-    html += "    <td" + style2 + ">%s</td>\n" % platform.system()
-    html += "    <td" + style1 + ">OS</td>\n"
-    i, html = newrow(1, ncol, html)
-    html += "    <td" + style2 + ">%s</td>\n" % multiprocessing.cpu_count()
-    html += "    <td" + style1 + ">CPU(s)</td>\n"
+    html += "  <tr>\n"
+    html, i = cols(html, platform.system(), 'OS', ncol, 0)
+    html, i = cols(html, multiprocessing.cpu_count(), 'CPU(s)', ncol, i)
 
     # Loop over packages
     for pckg in pckgs:
-        i, html = newrow(i, ncol, html)
-        html += "    <td" + style2 + ">%s</td>\n" % pckg.__version__
-        html += "    <td" + style1 + ">"+pckg.__name__+"</td>\n"
+        html, i = cols(html, pckg.__version__, pckg.__name__, ncol, i)
     html += "  </tr>\n"
 
     # sys.version
-    html += "  <tr" + style1 + ">\n"
-    html += "     <td" + style1 + " colspan='"
-    html += str(2*ncol)+"'>%s</td>\n" % sys.version
-    html += "  </tr>\n"
+    html = colspan(html, sys.version, ncol)
 
     # vml version
     if numexpr:
-        html += "  <tr" + style2 + ">\n"
-        html += "    <td" + style2[:-2]
-        html += "; text-align: left;' colspan='" + str(2*ncol)
-        html += "'>%s</td>\n" % numexpr.get_vml_version()
-        html += "  </tr>\n"
+        html = colspan(html, numexpr.get_vml_version(), ncol)
+
+    # Date and time info as title
+    html = colspan(html, time.strftime('%a %b %d %H:%M:%S %Y %Z'), ncol)
 
     # Finish table
     html += "</table>"
@@ -174,10 +177,7 @@ def _get_text(pckgs):
 
     # Width for text-version
     n = 54
-
-    # Date and time info as title
-    date_time_info = time.strftime('%a %b %d %H:%M:%S %Y %Z')
-    text = "\n  " + date_time_info + "\n" + n*'-' + '\n'
+    text = '\n' + n*'-' + '\n'
 
     # OS and CPUs
     text += '{:>15}'.format(platform.system())+' : OS\n'
@@ -197,6 +197,9 @@ def _get_text(pckgs):
         text += '\n'
         for txt in textwrap.wrap(numexpr.get_vml_version(), n-4):
             text += '  '+txt+'\n'
+
+    # Date and time info as title
+    text += time.strftime('\n  %a %b %d %H:%M:%S %Y %Z\n')
 
     # Finish
     text += n*'-'

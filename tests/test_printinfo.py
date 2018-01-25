@@ -21,8 +21,8 @@ def test_versions(capsys):
     versions((pytest,), mode='text')
     out2, _ = capsys.readouterr()
 
-    # They have to be the same, except time
-    assert out1[50:] == out2[50:]
+    # They have to be the same, except time (run at slightly different times)
+    assert out1[:-50] == out2[:-50]
 
     # Check the 'plain'-version, providing a package as list
     out3 = versions([pytest, ], mode='plain')
