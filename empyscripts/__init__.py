@@ -22,9 +22,11 @@ For `empymod`, see https://empymod.github.io.
 # License for the specific language governing permissions and limitations under
 # the License.
 
+from . import tmtemod
+from . import fdesign
 from .printinfo import versions
 
-__all__ = ['versions']
+__all__ = ['tmtemod', 'fdesign', 'versions']
 
 # Version
-__version__ = '0.2.1dev0'
+__version__ = '0.3.0'

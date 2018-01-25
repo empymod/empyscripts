@@ -9,13 +9,13 @@ except(IOError, ImportError):
 
 setup(
     name='empyscripts',
-    version='0.2.1dev0',
+    version='0.3.0',
     description='Add-ons for empymod',
     long_description=readme,
     author='Dieter Werthmüller',
     author_email='dieter@werthmuller.org',
     url='https://empymod.github.io',
-    download_url='https://github.com/empymod/empyscripts/tarball/v0.2.0',
+    download_url='https://github.com/empymod/empyscripts/tarball/v0.3.0',
     license='Apache License V2.0',
     packages=['empyscripts'],
     classifiers=[
