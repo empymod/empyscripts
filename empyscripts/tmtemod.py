@@ -63,6 +63,8 @@ from empymod.kernel import reflections, angle_factor
 from empymod.utils import (check_model, check_frequency, check_dipole, _strvar,
                            get_off_ang, get_layer_nr, printstartfinish)
 
+__all__ = ['dipole']
+
 
 def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
            verb=2):

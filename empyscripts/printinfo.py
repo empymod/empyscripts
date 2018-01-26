@@ -41,6 +41,8 @@ try:
 except ImportError:
     numexpr = False
 
+__all__ = ['versions', 'versions_html', 'versions_text']
+
 
 def versions(mode='print', add_pckg=[], ncol=3):
     """Return date, time, and version information.

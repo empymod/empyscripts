@@ -92,6 +92,11 @@ from empymod.filters import key_201_2009 as j0j1filt
 from empymod.filters import key_201_CosSin_2012 as sincosfilt
 from empymod.utils import printstartfinish, timedelta, default_timer
 
+__all__ = ['design', 'save_filter', 'load_filter', 'plot_result',
+           'print_result', 'Ghosh', 'j0_1', 'j0_2', 'j0_3', 'j0_4', 'j0_5',
+           'j1_1', 'j1_2', 'j1_3', 'j1_4', 'j1_5', 'sin_1', 'sin_2', 'sin_3',
+           'cos_1', 'cos_2', 'cos_3', 'empy_hankel']
+
 
 # 1. PRINCIPAL FILTER DESIGNING ROUTINES
 
