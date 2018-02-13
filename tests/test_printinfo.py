@@ -22,14 +22,16 @@ def test_versions(capsys):
     out2, _ = capsys.readouterr()
 
     # They have to be the same, except time (run at slightly different times)
-    assert out1[:-50] == out2[:-50]
+    assert out1[:-75] == out2[:-75]
 
-    # Check the 'plain'-version, providing a package as list
+    # Check the 'Pretty'/'plain'-version, providing a package as list
     out3 = versions('plain', add_pckg=[pytest, ])
     out3b = printinfo.versions_text(add_pckg=[pytest, ])
+    out3c = versions('Pretty', add_pckg=[pytest, ])
 
     # They have to be the same, except time (run at slightly different times)
-    assert out3[:-50] == out3b[:-50]
+    assert out3[:-75] == out3b[:-75]
+    assert out3[:-75] == out3c.data[:-75]
 
     # Check one of the standard packages
     assert 'numpy' in out3
@@ -37,12 +39,17 @@ def test_versions(capsys):
     # Check the provided package, with number
     assert pytest.__version__ + ' : pytest' in out3
 
-    # Check html-version, providing a package as a list
+    # Check 'HTML'/'html'-version, providing a package as a list
     out4 = versions('html', add_pckg=[pytest])
     out4b = printinfo.versions_html(add_pckg=[pytest])
+    out4c = versions('HTML', add_pckg=[pytest])
+
+    assert 'numpy' in out4
+    assert 'td style=' in out4
 
     # They have to be the same, except time (run at slightly different times)
     assert out4[:-50] == out4b[:-50]
+    assert out4[:-50] == out4c.data[:-50]
 
     # Check row of provided package, with number
     teststr = "<td style='background-color: #ccc; border: 2px solid #fff;'>"

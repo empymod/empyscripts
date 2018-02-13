@@ -20,6 +20,7 @@ CHAN=defaults
 PYTHON3VERSION="4 5 6"
 PRINT="/dev/null"
 PCKGS="numpy scipy python-dateutil setuptools pytest pytest-cov matplotlib"
+NMXPR="numexpr IPython"
 
 # Get Optional Input
 while getopts "hv:cpn" opt; do
@@ -48,7 +49,7 @@ done
 for i in ${PYTHON3VERSION[@]}; do
 
   # Print info
-  STR="  PYTHON 3."${i}"  **  Channel "$CHAN"  $STR2"
+  STR="  PYTHON 3."${i}"  **  Channel "$CHAN"  **"
   LENGTH=$(( ($(tput cols) - ${#STR}) / 2 - 2 ))
   printf "\n  "
   printf '\e[1m\e[34m%*s' "${LENGTH}" '' | tr ' ' -
@@ -61,7 +62,7 @@ for i in ${PYTHON3VERSION[@]}; do
   printf "\e[0m\n"
 
   # Create venv, with channel CHAN
-  conda create -y -n test_3${i} -c $CHAN python=3.${i} $PCKGS &> $PRINT
+  conda create -y -n test_3${i} -c $CHAN python=3.${i} $PCKGS $NMXPR &> $PRINT
 
   # Activate venv
   source activate test_3${i}
