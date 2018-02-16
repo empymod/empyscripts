@@ -24,4 +24,4 @@ Changelog
 
 **v0.1.1** - *2017-09-22*
 
-- Initial release.
+- Initial release; add-on `tmtemod`.
