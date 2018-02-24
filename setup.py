@@ -5,7 +5,7 @@ readme = open('README.rst').read()
 
 setup(
     name='empyscripts',
-    version='0.3.1',
+    version='0.3.2.dev0',
     description='Add-ons for empymod',
     long_description=readme,
     author='Dieter Werthmüller',
