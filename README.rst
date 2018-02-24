@@ -11,17 +11,17 @@ empyscripts
 This repo contains *add-ons* for the electromagnetic modeller **empymod**.
 These add-ons provide some very specific, additional functionalities:
 
-  - ``tmtemod``: Return up- and down-going TM/TE-mode contributions for
-    x-directed electric sources and receivers, which are located in the same
-    layer.
-  - ``fdesign``: Design digital linear filters for the Hankel and Fourier
-    transforms.
+- ``tmtemod``: Return up- and down-going TM/TE-mode contributions for
+  x-directed electric sources and receivers, which are located in the same
+  layer.
+- ``fdesign``: Design digital linear filters for the Hankel and Fourier
+  transforms.
 
 There is also ``empyscripts.versions()``, which can be used to show date, time,
 and package version information at the end of a notebook or script:
 
-  - ``versions('HTML')`` for Jupyter Notebooks, and
-  - ``versions()`` for IPython, QT, and Python consoles.
+- ``versions('HTML')`` for Jupyter Notebooks, and
+- ``versions()`` for IPython, QT, and Python consoles.
 
 See https://empymod.github.io/#features for a complete list of features of
 empymod.
