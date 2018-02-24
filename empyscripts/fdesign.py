@@ -2,13 +2,13 @@
 Digital linear filter (DLF) design
 ==================================
 
-Add-on for ``empymod``.
+Add-on for ``empymod``, [Werthmuller_2017]_.
 
 The add-on fdesign can be used to design digital linear filters for the Hankel
 or Fourier transform, or for any linear transform ([Ghosh_1970]_). For this
 included or provided theoretical transform pairs can be used. Alternatively,
-one can use the EM modeller empymod ([Werthmuller_2017]_) to use the responses
-to an arbitrary 1D model as numerical transform pair.
+one can use the EM modeller empymod to use the responses to an arbitrary 1D
+model as numerical transform pair.
 
 More information can be found in the following places:
 
@@ -201,49 +201,6 @@ Implemented Fourier transforms
     \\int^\\infty_0 \\frac{1}{a^2+l^2} \\cos(lr) dl =
     \\frac{\\pi}{2a} \\exp\\left(-ar\\right)
 
-
-.. |_| unicode:: 0xA0
-   :trim:
-
-
-References |_|
---------------
-
-.. [Anderson_1975] Anderson, W. L.,  1975, Improved digital filters for
-   evaluating Fourier and Hankel transform integrals: USGS, PB242800;
-   `pubs.er.usgs.gov/publication/70045426
-   <https://pubs.er.usgs.gov/publication/70045426>`_.
-.. [Chave_and_Cox_1982] Chave, A. D., and C. S. Cox, 1982, Controlled
-   electromagnetic sources for measuring electrical conductivity beneath the
-   oceans: 1. forward problem and model study: Journal of Geophysical Research,
-   87, 5327-5338; DOI: |_| `10.1029/JB087iB07p05327
-   <http://doi.org/10.1029/JB087iB07p05327>`_.
-.. [Ghosh_1970] Ghosh, D. P.,  1970, The application of linear filter theory to
-   the direct interpretation of geoelectrical resistivity measurements: Ph.D.
-   Thesis, TU Delft; UUID: |_| `88a568bb-ebee-4d7b-92df-6639b42da2b2
-   <http://resolver.tudelft.nl/uuid:88a568bb-ebee-4d7b-92df-6639b42da2b2>`_.
-.. [Guptasarma_and_Singh_1997] Guptasarma, D., and B. Singh, 1997, New digital
-   linear filters for Hankel J0 and J1 transforms: Geophysical Prospecting, 45,
-   745--762; DOI: |_| `10.1046/j.1365-2478.1997.500292.x
-   <http://dx.doi.org/10.1046/j.1365-2478.1997.500292.x>`_.
-.. [Key_2009] Key, K., 2009, 1D inversion of multicomponent, multifrequency
-   marine CSEM data: Methodology and synthetic studies for resolving thin
-   resistive layers: Geophysics, 74(2), F9--F20; DOI: |_| `10.1190/1.3058434
-   <http://doi.org/10.1190/1.3058434>`_.
-   Software: `marineemlab.ucsd.edu/Projects/Occam/1DCSEM
-   <http://marineemlab.ucsd.edu/Projects/Occam/1DCSEM>`_.
-.. [Key_2012] Key, K., 2012, Is the fast Hankel transform faster than
-   quadrature?: Geophysics, 77, F21--F30; DOI: |_| `10.1190/GEO2011-0237.1
-   <http://dx.doi.org/10.1190/GEO2011-0237.1>`_;
-   Software: `software.seg.org/2012/0003 <http://software.seg.org/2012/0003>`_.
-.. [Kong_2007] Kong, F. N., 2007, Hankel transform filters for dipole antenna
-   radiation in a conductive medium: Geophysical Prospecting, 55, 83--89;
-   DOI: |_| `10.1111/j.1365-2478.2006.00585.x
-   <http://dx.doi.org/10.1111/j.1365-2478.2006.00585.x>`_.
-.. [Werthmuller_2017] Werthmüller, D., 2017, An open-source full {3D}
-   electromagnetic modeler for 1D VTI media in Python: empymod: Geophysics, 82,
-   WB9--WB19.; DOI: |_| `10.1190/geo2016-0626.1
-   <http://doi.org/10.1190/geo2016-0626.1>`_.
 
 """
 # Copyright 2017-2018 Dieter Werthmüller
