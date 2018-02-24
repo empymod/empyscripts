@@ -1,6 +1,8 @@
 """
-Add-on for ``empymod``: split into up- and down-going TM and TE modes
-=====================================================================
+Calculate up- and down-going TM and TE modes
+============================================
+
+Add-on for ``empymod``.
 
 This is a stripped-down version of ``empymod`` with a lot of simplifications
 but an important addition. The modeller ``empymod`` returns the total field,
@@ -71,7 +73,7 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
            verb=2):
     """Return the electromagnetic field due to a dipole source.
 
-    This is a modified version of empymod.model.dipole(). It returns the
+    This is a modified version of ``empymod.model.dipole()``. It returns the
     separated contributions of TM--, TM-+, TM+-, TM++, TMdirect, TE--, TE-+,
     TE+-, TE++, and TEdirect.
 
@@ -95,8 +97,8 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
         Horizontal resistivities rho_h (Ohm.m); #res = #depth + 1.
 
     freqtime : float
-        Frequency f (Hz). (The name `freqtime` is kept for consistency with
-        `empymod.model.dipole()`. Only one frequency at once.
+        Frequency f (Hz). (The name ``freqtime`` is kept for consistency with
+        ``empymod.model.dipole()``. Only one frequency at once.
 
     aniso : array_like, optional
         Anisotropies lambda = sqrt(rho_v/rho_h) (-); #aniso = #res.
@@ -161,7 +163,7 @@ def dipole(src, rec, depth, res, freqtime, aniso=None, eperm=None, mperm=None,
     lsrc, zsrc = get_layer_nr(src, depth)
     lrec, zrec = get_layer_nr(rec, depth)
 
-    # Check limitations of this routine compared to the standard `dipole`
+    # Check limitations of this routine compared to the standard ``dipole``
     if lsrc != lrec:                           # src and rec in same layer
         print("* ERROR   :: src and rec must be in the same layer; " +
               "<lsrc>/<lrec> provided: "+str(lsrc)+"/"+str(lrec))

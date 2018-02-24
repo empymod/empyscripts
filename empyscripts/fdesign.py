@@ -1,32 +1,210 @@
 """
-Add-on for ``empymod``: digital linear filter (DLF) design
-==========================================================
+Digital linear filter (DLF) design
+==================================
+
+Add-on for ``empymod``.
 
 The add-on fdesign can be used to design digital linear filters for the Hankel
-or Fourier transform, or for any linear transform ([Gosh_1970]_). For this
+or Fourier transform, or for any linear transform ([Ghosh_1970]_). For this
 included or provided theoretical transform pairs can be used. Alternatively,
-one can use the EM modeller empymod to use the responses to an arbitrary 1D
-model as numerical transform pair.
+one can use the EM modeller empymod ([Werthmuller_2017]_) to use the responses
+to an arbitrary 1D model as numerical transform pair.
 
 More information can be found in the following places:
 
 - The article about fdesign is in the repo
-    https://github.com/empymod/article-fdesign
+  https://github.com/empymod/article-fdesign
 - Example notebooks to design a filter can be found in the repo
-    https://github.com/empymod/example-notebooks
-- In the document
-    https://github.com/empymod/empyscripts => docs/fdesign.pdf
+  https://github.com/empymod/example-notebooks
 
 This filter designing tool uses the direct matrix inversion method as described
-in [Kong_2007]_ and is based on scripts by [Key_2012]_. The tool is an add-on
-to the electromagnetic modeller empymod [Werthmuller_2017]_. Fruitful
-discussions with Evert Slob and Kerry Key improved the add-on substantially.
+in [Kong_2007]_ and is based on scripts by [Key_2012]_. The whole project of
+``fdesign`` started with the Matlab scripts from Kerry Key, which he used to
+design his filters for [Key_2009]_, [Key_2012]_. Fruitful discussions with
+Evert Slob and Kerry Key improved the add-on substantially.
 
 Note that the use of empymod to create numerical transform pairs is, as of now,
 only implemented for the Hankel transform.
 
+
+Implemented analytical transform pairs
+--------------------------------------
+
+The following tables list the transform pairs which are implemented by default.
+Any other transform pair can be provided as input. A transform pair is defined
+in the following way:
+
+.. code-block:: python
+
+   from empyscripts.fdesign import Ghosh
+
+   def my_tp_pair(var):
+       '''My transform pair.'''
+
+       def lhs(l):
+           return func(l, var)
+
+       def rhs(r):
+           return func(r, var)
+
+       return Ghosh(name, lhs, rhs)
+
+Here, ``name`` must be one of ``j0``, ``j1``, ``sin``, or ``cos``, depending
+what type of transform pair it is. Additional variables are provided with
+``var``. The evaluation points of the ``lhs`` are denoted by ``l``, and the
+evaluation points of the ``rhs`` are denoted as ``r``. As an example here the
+implemented transform pair ``j0_1``
+
+.. code-block:: python
+
+   def j0_1(a=1):
+       '''Hankel transform pair J0_1 ([Anderson_1975]_).'''
+
+       def lhs(l):
+           return l*np.exp(-a*l**2)
+
+       def rhs(r):
+           return np.exp(-r**2/(4*a))/(2*a)
+
+       return Ghosh('j0', lhs, rhs)
+
+
+Implemented Hankel transforms
+-----------------------------
+
+- ``j0_1`` [Anderson_1975]_
+
+  .. math::
+
+      \\int^\\infty_0 l \\exp\\left(-al^2\\right) J_0(lr) dl =
+      \\frac{\\exp\\left(\\frac{-r^2}{4a}\\right)}{2a}
+
+- ``j0_2`` [Anderson_1975]_
+
+  .. math::
+
+      \\int^\\infty_0 \\exp\\left(-al\\right) J_0(lr) dl =
+      \\frac{1}{\\sqrt{a^2+r^2}}
+
+- ``j0_3`` [Guptasarma_and_Singh_1997]_
+
+  .. math::
+
+      \\int^\\infty_0 l\\exp\\left(-al\\right) J_0(lr) dl =
+      \\frac{a}{(a^2 + r^2)^{3/2}}
+
+- ``j0_4`` [Chave_and_Cox_1982]_
+
+  .. math::
+
+      \\int^\\infty_0 \\frac{l}{\\beta} \\exp\\left(-\\beta z_v \\right)
+      J_0(lr) dl =
+      \\frac{\\exp\\left(-\\gamma R\\right)}{R}
+
+- ``j0_5`` [Chave_and_Cox_1982]_
+
+  .. math::
+
+    \\int^\\infty_0 l \\exp\\left(-\\beta z_v \\right)
+    J_0(lr) dl =
+    \\frac{ z_v (\\gamma R + 1)}{R^3}\\exp\\left(-\\gamma R\\right)
+
+- ``j1_1`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 l^2 \\exp\\left(-al^2\\right) J_1(lr) dl =
+    \\frac{r}{4a^2} \\exp\\left(-\\frac{r^2}{4a}\\right)
+
+
+- ``j1_2`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 \\exp\\left(-al\\right) J_1(lr) dl =
+    \\frac{\\sqrt{a^2+r^2}-a}{r\\sqrt{a^2 + r^2}}
+
+- ``j1_3`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 l \\exp\\left(-al\\right) J_1(lr) dl =
+    \\frac{r}{(a^2 + r^2)^{3/2}}
+
+- ``j1_4`` [Chave_and_Cox_1982]_
+
+  .. math::
+
+    \\int^\\infty_0 \\frac{l^2}{\\beta} \\exp\\left(-\\beta z_v \\right)
+    J_1(lr) dl =
+    \\frac{r(\\gamma R+1)}{R^3}\\exp\\left(-\\gamma R\\right)
+
+- ``j1_5`` [Chave_and_Cox_1982]_
+
+  .. math::
+
+    \\int^\\infty_0 l^2 \\exp\\left(-\\beta z_v \\right)
+    J_1(lr) dl =
+    \\frac{r z_v(\\gamma^2R^2+3\\gamma R+3)}{R^5}\\exp\\left(-\\gamma R\\right)
+
+Where
+
+.. math:: a >0, r>0
+.. math:: z_v = |z_{rec} - z_{src}|
+.. math:: R = \\sqrt{r^2 + z_v^2}
+.. math:: \\gamma = \\sqrt{2j\\pi\\mu_0f/\\rho}
+.. math:: \\beta = \\sqrt{l^2 + \\gamma^2}
+
+
+Implemented Fourier transforms
+------------------------------
+
+- ``sin_1`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 l\\exp\\left(-a^2l^2\\right) \\sin(lr) dl =
+    \\frac{\\sqrt{\\pi}r}{4a^3} \\exp\\left(-\\frac{r^2}{4a^2}\\right)
+
+- ``sin_2`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 \\exp\\left(-al\\right) \\sin(lr) dl =
+    \\frac{r}{a^2 + r^2}
+
+- ``sin_3`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 \\frac{l}{a^2+l^2} \\sin(lr) dl =
+    \\frac{\\pi}{2} \\exp\\left(-ar\\right)
+
+- ``cos_1`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 \\exp\\left(-a^2l^2\\right) \\cos(lr) dl =
+    \\frac{\\sqrt{\\pi}}{2a} \\exp\\left(-\\frac{r^2}{4a^2}\\right)
+
+- ``cos_2`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 \\exp\\left(-al\\right) \\cos(lr) dl =
+    \\frac{a}{a^2 + r^2}
+
+- ``cos_3`` [Anderson_1975]_
+
+  .. math::
+
+    \\int^\\infty_0 \\frac{1}{a^2+l^2} \\cos(lr) dl =
+    \\frac{\\pi}{2a} \\exp\\left(-ar\\right)
+
+
 .. |_| unicode:: 0xA0
    :trim:
+
 
 References |_|
 --------------
@@ -43,11 +221,17 @@ References |_|
 .. [Ghosh_1970] Ghosh, D. P.,  1970, The application of linear filter theory to
    the direct interpretation of geoelectrical resistivity measurements: Ph.D.
    Thesis, TU Delft; UUID: |_| `88a568bb-ebee-4d7b-92df-6639b42da2b2
-   <http://resolver.tudelft.nl/uuid:88a568bb-ebee-4d7b-92df-6639b42da2b2>1_.
+   <http://resolver.tudelft.nl/uuid:88a568bb-ebee-4d7b-92df-6639b42da2b2>`_.
 .. [Guptasarma_and_Singh_1997] Guptasarma, D., and B. Singh, 1997, New digital
    linear filters for Hankel J0 and J1 transforms: Geophysical Prospecting, 45,
    745--762; DOI: |_| `10.1046/j.1365-2478.1997.500292.x
    <http://dx.doi.org/10.1046/j.1365-2478.1997.500292.x>`_.
+.. [Key_2009] Key, K., 2009, 1D inversion of multicomponent, multifrequency
+   marine CSEM data: Methodology and synthetic studies for resolving thin
+   resistive layers: Geophysics, 74(2), F9--F20; DOI: |_| `10.1190/1.3058434
+   <http://doi.org/10.1190/1.3058434>`_.
+   Software: `marineemlab.ucsd.edu/Projects/Occam/1DCSEM
+   <http://marineemlab.ucsd.edu/Projects/Occam/1DCSEM>`_.
 .. [Key_2012] Key, K., 2012, Is the fast Hankel transform faster than
    quadrature?: Geophysics, 77, F21--F30; DOI: |_| `10.1190/GEO2011-0237.1
    <http://dx.doi.org/10.1190/GEO2011-0237.1>`_;
@@ -56,7 +240,7 @@ References |_|
    radiation in a conductive medium: Geophysical Prospecting, 55, 83--89;
    DOI: |_| `10.1111/j.1365-2478.2006.00585.x
    <http://dx.doi.org/10.1111/j.1365-2478.2006.00585.x>`_.
-.. [Werthmüller_2017] Werthmüller, D., 2017, An open-source full {3D}
+.. [Werthmuller_2017] Werthmüller, D., 2017, An open-source full {3D}
    electromagnetic modeler for 1D VTI media in Python: empymod: Geophysics, 82,
    WB9--WB19.; DOI: |_| `10.1190/geo2016-0626.1
    <http://doi.org/10.1190/geo2016-0626.1>`_.
@@ -106,7 +290,7 @@ def design(n, spacing, shift, fI, fC=False, r=None, r_def=(1, 1, 2), reim=None,
     """Digital linear filter (DLF) design
 
     This routine can be used to design digital linear filters for the Hankel or
-    Fourier transform, or for any linear transform ([Gosh_1970]_). For this
+    Fourier transform, or for any linear transform ([Ghosh_1970]_). For this
     included or provided theoretical transform pairs can be used.
     Alternatively, one can use the EM modeller empymod to use the responses to
     an arbitrary 1D model as numerical transform pair.
@@ -147,9 +331,10 @@ def design(n, spacing, shift, fI, fC=False, r=None, r_def=(1, 1, 2), reim=None,
     r_def : tuple (add_left, add_right, factor), optional
         Definition of the right-hand side evaluation points r of the inversion.
         r is derived from the base values, default is (1, 1, 2).
-            rmin = log10(1/max(base)) - add_left
-            rmax = log10(1/min(base)) + add_right
-            r = logspace(rmin, rmax, factor*n)
+
+        - rmin = log10(1/max(base)) - add_left
+        - rmax = log10(1/min(base)) + add_right
+        - r = logspace(rmin, rmax, factor*n)
 
     reim : np.real or np.imag, optional
         Which part of complex transform pairs is used for the inversion.
@@ -164,7 +349,7 @@ def design(n, spacing, shift, fI, fC=False, r=None, r_def=(1, 1, 2), reim=None,
         evaluation of the goodness. Default is 0.01 (1 %).
 
     name : str, optional
-        Name of the filter. Defaults to 'dlf_'+str(n).
+        Name of the filter. Defaults to dlf_+str(n).
 
     full_output : bool, optional
         If True, returns best filter and output from scipy.optimize.brute; else
@@ -203,7 +388,7 @@ def design(n, spacing, shift, fI, fC=False, r=None, r_def=(1, 1, 2), reim=None,
         Best filter for the input parameters.
     full : tuple
         Output from scipy.optimize.brute with full_output=True. (Returned when
-        `full_output` is True.)
+        ``full_output`` is True.)
 
     """
 
@@ -439,10 +624,10 @@ def print_result(filt, full=None, cvar='amp'):
 def _call_qc_transform_pairs(n, ispacing, ishift, fI, fC, r, r_def, reim):
     """QC the input transform pairs."""
     print('* QC: Input transform-pairs:')
-    print('  fC: x-range defined through `n`, `spacing`, `shift`, and ' +
-          '`r`-parameters; b-range defined through `r`-parameter.')
-    print('  fI: x- and b-range defined through `n`, `spacing`, `shift`' +
-          ', and `r_def`-parameters.')
+    print('  fC: x-range defined through ``n``, ``spacing``, ``shift``, and ' +
+          '``r``-parameters; b-range defined through ``r``-parameter.')
+    print('  fI: x- and b-range defined through ``n``, ``spacing``' +
+          ', ``shift``, and ``r_def``-parameters.')
 
     # Calculate min/max k, from minimum and maximum spacing/shift
     minspace = np.arange(*ispacing).min()
@@ -863,8 +1048,8 @@ def empy_hankel(ftype, zsrc, zrec, res, freqtime, depth=[], aniso=None,
                 htarg=None, verblhs=0, verbrhs=0):
     """Numerical transform pair with empymod.
 
-    All parameters except `ftype`, `verblhs`, and `verbrhs` correspond to the
-    input parameters to `empymod.dipole`. See there for more information.
+    All parameters except ``ftype``, ``verblhs``, and ``verbrhs`` correspond to
+    the input parameters to ``empymod.dipole``. See there for more information.
 
     Note that if depth=[], the analytical full-space solutions will be used
     (much faster).
@@ -873,12 +1058,14 @@ def empy_hankel(ftype, zsrc, zrec, res, freqtime, depth=[], aniso=None,
     ----------
     ftype : str or list of strings
         Either of: {'j0', 'j1', 'j2', ['j0', 'j1']}
+
         - 'j0': Analyze J0-term with ab=11, angle=45°
         - 'j1': Analyze J1-term with ab=31, angle=0°
         - 'j2': Analyze J0- and J1-terms jointly with ab=12, angle=45°
         - ['j0', 'j1']: Same as calling empy_hankel twice, once with 'j0' and
                         one with 'j1'; can be provided like this to
                         fdesign.design.
+
     verblhs, verbrhs: int
         verb-values provided to empymod for lhs and rhs.
 

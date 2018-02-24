@@ -1,6 +1,8 @@
 """
-Add-on for ``empymod``: tools to print date, time, and version information
-==========================================================================
+Tools to print date, time, and version information
+==================================================
+
+Add-on for ``empymod``.
 
 Print or return date, time, and package version information in any environment
 (Jupyter notebook, IPython console, Python console, QT console), either as
@@ -56,7 +58,7 @@ def versions(mode='print', add_pckg=[], ncol=3):
         - ipynbtools.py from qutip https://github.com/qutip
         - watermark.py from https://github.com/rasbt/watermark
 
-    This is a wrapper for `versions_html` and `versions_text`.
+    This is a wrapper for ``versions_html`` and ``versions_text``.
 
     Parameters
     ----------
@@ -76,12 +78,12 @@ def versions(mode='print', add_pckg=[], ncol=3):
 
     ncol : int, optional
         Number of package-columns in html table; only has effect if
-        `mode='HTML'` or `mode='html'`. Defaults to 3.
+        ``mode='HTML'`` or ``mode='html'``. Defaults to 3.
 
 
     Returns
     -------
-    Depending on `mode` (HTML-instance; plain text; html as plain text; or
+    Depending on ``mode`` (HTML-instance; plain text; html as plain text; or
     nothing, only printing to stdout).
 
 
@@ -116,7 +118,7 @@ def versions(mode='print', add_pckg=[], ncol=3):
 def versions_html(add_pckg=[], ncol=3):
     """HTML version.
 
-    See `versions` for details.
+    See ``versions`` for details.
     """
 
     # Check ncol
@@ -179,7 +181,7 @@ def versions_html(add_pckg=[], ncol=3):
 def versions_text(add_pckg=[]):
     """Plain-text version.
 
-    See `versions` for details.
+    See ``versions`` for details.
     """
 
     # Width for text-version
