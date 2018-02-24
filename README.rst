@@ -23,8 +23,21 @@ and package version information at the end of a notebook or script:
   - ``versions('HTML')`` for Jupyter Notebooks, and
   - ``versions()`` for IPython, QT, and Python consoles.
 
-For information regarding installation and empymod have a look at
-https://empymod.github.io.
+See https://empymod.github.io/#features for a complete list of features of
+empymod.
+
+
+More information
+================
+
+For more information regarding installation, usage, these add-ons,
+contributing, roadmap, bug reports, and much more, see
+
+- **Website**: https://empymod.github.io,
+- **Documentation empymod**: https://empymod.readthedocs.io,
+- **Documentation add-ons**: https://empyscripts.readthedocs.io,
+- **Source Code**: https://github.com/empyscripts/empyscripts,
+- **Examples**: https://github.com/empymod/example-notebooks.
 
 
 License information
