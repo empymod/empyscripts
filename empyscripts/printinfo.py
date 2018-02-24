@@ -1,6 +1,6 @@
 """
-Add-on for `empymod`: tools to print date, time, and version information
-========================================================================
+Add-on for ``empymod``: tools to print date, time, and version information
+==========================================================================
 
 Print or return date, time, and package version information in any environment
 (Jupyter notebook, IPython console, Python console, QT console), either as

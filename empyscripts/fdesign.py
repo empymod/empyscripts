@@ -1,6 +1,6 @@
 """
-Add-on for `empymod`: digital linear filter (DLF) design
-========================================================
+Add-on for ``empymod``: digital linear filter (DLF) design
+==========================================================
 
 The add-on fdesign can be used to design digital linear filters for the Hankel
 or Fourier transform, or for any linear transform ([Gosh_1970]_). For this
@@ -10,12 +10,12 @@ model as numerical transform pair.
 
 More information can be found in the following places:
 
-    - The article about fdesign is in the repo
-      https://github.com/empymod/article-fdesign
-    - Example notebooks to design a filter can be found in the repo
-      https://github.com/empymod/example-notebooks
-    - In the document
-      https://github.com/empymod/empyscripts => docs/fdesign.pdf
+- The article about fdesign is in the repo
+    https://github.com/empymod/article-fdesign
+- Example notebooks to design a filter can be found in the repo
+    https://github.com/empymod/example-notebooks
+- In the document
+    https://github.com/empymod/empyscripts => docs/fdesign.pdf
 
 This filter designing tool uses the direct matrix inversion method as described
 in [Kong_2007]_ and is based on scripts by [Key_2012]_. The tool is an add-on
@@ -64,7 +64,7 @@ References |_|
 """
 # Copyright 2017-2018 Dieter Werthmüller
 #
-# This file is part of `empyscripts`.
+# This file is part of empyscripts.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.  You may obtain a copy

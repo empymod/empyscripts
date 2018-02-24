@@ -1,6 +1,9 @@
 empyscripts
 ###########
 
+.. image:: https://readthedocs.org/projects/empyscripts/badge/?version=latest
+   :target: http://empyscripts.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 .. image:: https://travis-ci.org/empymod/empyscripts.svg?branch=master
    :target: https://travis-ci.org/empymod/empyscripts
    :alt: Travis-CI
@@ -8,7 +11,9 @@ empyscripts
    :target: https://coveralls.io/github/empymod/empyscripts?branch=master
    :alt: Coveralls
 
-This repo contains *add-ons* for the electromagnetic modeller **empymod**.
+.. sphinx-inclusion-marker
+
+The **empyscripts** are *add-ons* for the electromagnetic modeller **empymod**.
 These add-ons provide some very specific, additional functionalities:
 
 - ``tmtemod``: Return up- and down-going TM/TE-mode contributions for
@@ -30,13 +35,13 @@ empymod.
 More information
 ================
 
-For more information regarding installation, usage, these add-ons,
-contributing, roadmap, bug reports, and much more, see
+For more information regarding installation, usage, add-ons, contributing,
+roadmap, bug reports, and much more, see
 
 - **Website**: https://empymod.github.io,
 - **Documentation empymod**: https://empymod.readthedocs.io,
 - **Documentation add-ons**: https://empyscripts.readthedocs.io,
-- **Source Code**: https://github.com/empymod/empyscripts,
+- **Source Code**: https://github.com/empymod,
 - **Examples**: https://github.com/empymod/example-notebooks.
 
 

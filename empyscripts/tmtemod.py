@@ -1,12 +1,12 @@
 """
-Add-on for `empymod`: split into up- and down-going TM and TE modes
-===================================================================
+Add-on for ``empymod``: split into up- and down-going TM and TE modes
+=====================================================================
 
-This is a stripped-down version of `empymod` with a lot of simplifications but
-an important addition. The modeller `empymod` returns the total field, hence
-not distinguishing between TM and TE mode, and even less between up- and
+This is a stripped-down version of ``empymod`` with a lot of simplifications
+but an important addition. The modeller ``empymod`` returns the total field,
+hence not distinguishing between TM and TE mode, and even less between up- and
 down-going fields. The reason behind this is simple: The derivation of Hunziker
-et al. (2015), on which `empymod` is based, returns the total field. In this
+et al. (2015), on which ``empymod`` is based, returns the total field. In this
 derivation each mode (TM and TE) contains non-physical contributions. The
 non-physical contributions have opposite signs in TM and TE, so they cancel
 each other out in the total field. However, in order to obtain the correct TM
@@ -14,35 +14,36 @@ and TE contributions one has to remove these non-physical parts.
 
 This is what this routine does, but only for an x-directed electric source with
 an x-directed electric receiver, and in the frequency domain (src and rec in
-same layer). This version of `dipole` returns the signal separated into TM++,
+same layer). This version of ``dipole`` returns the signal separated into TM++,
 TM+-, TM-+, TM--, TE++, TE+-, TE-+, and TE-- as well as the direct field TM and
 TE contributions. The first superscript denotes the direction in which the
 field diffuses towards the receiver and the second superscript denotes the
 direction in which the field diffuses away from the source. For both the
 plus-sign indicates the field diffuses in the downward direction and the
 minus-sign indicates the field diffuses in the upward direction. It uses
-`empymod` wherever possible. See the corresponding functions in `empymod` for
-more explanation and documentation regarding input parameters. There are
+``empymod`` wherever possible. See the corresponding functions in ``empymod``
+for more explanation and documentation regarding input parameters. There are
 important limitations:
 
-    - `ab` == 11                    [=> x-directed el. source & el. receivers]
-    - `signal` == None              [=> only frequency domain]
-    - `xdirect` == False            [=> direct field calc. in wavenr-domain]
-    - `ht` == 'fht'
-    - `htarg` == 'key_201_2012'
-    - Options `ft`, `ftarg`, `opt`, and `loop` are not available.
-    - `lsrc` == `lrec`              [=> src & rec are assumed in same layer!]
-    - Model must have more than 1 layer
-    - Electric permittivity and magnetic permeability are isotropic.
-    - Only one frequency at once.
+- ``ab`` == 11                   [=> x-directed el. source & el. receivers]
+- ``signal`` == None             [=> only frequency domain]
+- ``xdirect`` == False           [=> direct field calc. in wavenr-domain]
+- ``ht`` == 'fht'
+- ``htarg`` == 'key_201_2012'
+- Options ``ft``, ``ftarg``, ``opt``, and ``loop`` are not available.
+- ``lsrc`` == ``lrec``           [=> src & rec are assumed in same layer!]
+- Model must have more than 1 layer
+- Electric permittivity and magnetic permeability are isotropic.
+- Only one frequency at once.
 
 See also the document /docs/TMTEexplanation.pdf.
 
-This script is tested and works with `empymod v1.4.4`.
+This script is tested and works with ``empymod v1.4.4`` onwards.
+
 """
 # Copyright 2017-2018 Dieter Werthmüller
 #
-# This file is part of `empyscripts`.
+# This file is part of empyscripts.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.  You may obtain a copy

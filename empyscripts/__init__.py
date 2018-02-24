@@ -1,14 +1,14 @@
 """
 
-Add-ons for `empymod`. See documents in the *docs* directory for more
+Add-ons for ``empymod``. See documents in the *docs* directory for more
 information.
 
-For `empymod`, see https://empymod.github.io.
+For ``empymod``, see https://empymod.github.io.
 
 """
 # Copyright 2017-2018 Dieter Werthmüller
 #
-# This file is part of `empyscripts`.
+# This file is part of empyscripts.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.  You may obtain a copy
