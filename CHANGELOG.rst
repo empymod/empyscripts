@@ -1,27 +1,27 @@
 Changelog
 #########
 
-**latest**
+
+latest
+------
 
 - Create sphinx-docs (in process)
 
-------
 
-**v0.3.0** - *2018-01-25*
+v0.3.0 - *2018-01-25*
+---------------------
 
-- New utility `printinfo`.
+- New utility ``printinfo``.
 
 
-------
+v0.2.0 - *2018-01-09*
+---------------------
 
-**v0.2.0** - *2018-01-09*
-
-- New add-on `fdesign`.
+- New add-on ``fdesign``.
 - Now has tests and TravisCI, coveralls integration.
 
 
-------
+v0.1.1 - *2017-09-22*
+---------------------
 
-**v0.1.1** - *2017-09-22*
-
-- Initial release; add-on `tmtemod`.
+- Initial release; add-on ``tmtemod``.

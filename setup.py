@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
 
-try:
-    import pypandoc
-    readme = pypandoc.convert('README.md', 'rst')
-except(IOError, ImportError):
-    readme = open('README.md').read()
+readme = open('README.rst').read()
 
 setup(
     name='empyscripts',
