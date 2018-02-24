@@ -8,55 +8,23 @@ empyscripts
    :target: https://coveralls.io/github/empymod/empyscripts?branch=master
    :alt: Coveralls
 
-This repo contains *add-ons* for ``empymod``. These are scripts that did not
-make it into ``empymod``. Most likely because they require some sort of change
-to the ``empymod`` core features, but are only for a very specific use cases.
-Hence it was decided to not implement them in ``empymod``.
+This repo contains *add-ons* for the electromagnetic modeller **empymod**.
+These add-ons provide some very specific, additional functionalities:
 
-Please note that these add-ons are not as thoroughly tested as ``empymod``, and
-potentially not as well documented either.
+  - ``tmtemod``: Return up- and down-going TM/TE-mode contributions for
+    x-directed electric sources and receivers, which are located in the same
+    layer.
+  - ``fdesign``: Design digital linear filters for the Hankel and Fourier
+    transforms.
 
+There is also ``empyscripts.versions()``, which can be used to show date, time,
+and package version information at the end of a notebook or script:
 
-More information
-================
+  - ``versions('HTML')`` for Jupyter Notebooks, and
+  - ``versions()`` for IPython, QT, and Python consoles.
 
-For information regarding ``empymod`` have a look at https://empymod.github.io.
-
-
-Installation
-============
-
-You can install empyscripts via ``conda``
-
-.. code-block:: console
-
-   > conda install -c prisae empyscripts
-
-via ``pip``:
-
-.. code-block:: console
-
-   > pip install empyscripts
-
-or download this repo and run
-
-.. code-block:: console
-
-    > python setup.py install
-
-
-Add-ons
-=======
-
-- ``tmtemod``: Return up- and down-going TM/TE-mode contributions for x-directed
-  electric sources and receivers, which are located in the same layer.
-- ``fdesign``: Design digital linear filters for the Hankel and Fourier
-  transforms.
-
-There is also ``empyscripts.versions()``: ``versions('HTML')`` (in Jupyter
-Notebooks) or ``versions()`` (in IPython, QT, and Python consoles) can be used
-to show date, time, and package version information at the end of a notebook or
-script.
+For information regarding installation and empymod have a look at
+https://empymod.github.io.
 
 
 License information
