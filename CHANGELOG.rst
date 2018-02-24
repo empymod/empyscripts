@@ -2,10 +2,10 @@ Changelog
 #########
 
 
-latest
-------
+v0.3.1 - *2018-02-24*
+---------------------
 
-- Create sphinx-docs (in process)
+- Add sphinx-docs, https://empyscripts.readthedocs.io
 
 
 v0.3.0 - *2018-01-25*
