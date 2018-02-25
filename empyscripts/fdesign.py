@@ -1,5 +1,5 @@
 """
-Digital linear filter (DLF) design
+Digital Linear Filter (DLF) design
 ==================================
 
 Add-on for ``empymod``, [Werthmuller_2017]_.

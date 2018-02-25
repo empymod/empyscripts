@@ -2,16 +2,16 @@
 Tools to print date, time, and version information
 ==================================================
 
-Add-on for ``empymod``.
+Add-on for ``empymod``, [Werthmuller_2017]_.
 
 Print or return date, time, and package version information in any environment
 (Jupyter notebook, IPython console, Python console, QT console), either as
 html-table (notebook) or as plain text (anywhere).
 
-This script was heavily inspired by:
+This script was heavily inspired by
 
-    - ipynbtools.py from qutip https://github.com/qutip
-    - watermark.py from https://github.com/rasbt/watermark
+- ``ipynbtools.py`` from https://github.com/qutip, and
+- ``watermark.py`` from https://github.com/rasbt/watermark,
 
 """
 
@@ -92,15 +92,9 @@ def versions(mode='print', add_pckg=[], ncol=3):
     >>> import pytest
     >>> import dateutil
     >>> from empyscripts import versions
-
-    Default values
-    >>> versions()
-
-    Provide additional package
-    >>> versions('plain', pytest)
-
-    Provide additional packages
-    >>> versions('HTML', [pytest, dateutil], ncol=5)
+    >>> versions()                 # Default values
+    >>> versions('plain', pytest)  # Provide additional package
+    >>> versions('HTML', [pytest, dateutil], ncol=5)  # HTML
 
     """
     if mode == 'html':
