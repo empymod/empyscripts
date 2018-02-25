@@ -17,9 +17,8 @@ Note: I really should replace this with an automatic deploy-setup...
 
    4. Get the Zenodo-DOI and add it to release notes
 
-   5. Ensure ``pypandoc`` and ``python3-setuptools`` are installed:
+   5. Ensure ``python3-setuptools`` is installed:
 
-        conda install pypandoc
         sudo apt install python3-setuptools
 
    6. Create tar and wheel
@@ -53,7 +52,8 @@ Note: I really should replace this with an automatic deploy-setup...
 
         # Now to the conda-build part
         conda skeleton pypi empyscripts
-        # Cannot find empymod (why?) => add empymod to meta.yaml -host and -run
+        # Cannot find empymod, matplotlib (why?)
+        # => add empymod, matplotlib to meta.yaml -host and -run
         conda build --python 3.4 empyscripts
         conda build --python 3.5 empyscripts
         conda build --python 3.6 empyscripts
