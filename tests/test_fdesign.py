@@ -111,7 +111,7 @@ def test_load_filter():
                     reason="Plots are slightly different in Python 3.4.")
 class TestFiguresMatplotlib:
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_result1(self):
         # Quick run `design` with all verb/plot on, just to check that no
         # errors occur. Actually plots are checked in test below and the other
@@ -124,21 +124,21 @@ class TestFiguresMatplotlib:
         fdesign.plot_result(dat1[1], dat1[2], cvar='amp', prntres=True)
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_result2(self):
         # plot_result one shift several spacings
         dat5 = DATA['case5'][()]
         fdesign.plot_result(dat5[1], dat5[2])
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_result3(self):
         # plot_result several shifts one spacing for max r
         dat6 = DATA['case6'][()]
         fdesign.plot_result(dat6[1], dat6[2], cvar='r')
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_call_qc_transform_pairs1(self):
         # plot_transform_pair "normal" case
         r = np.logspace(1, 2, 50)
@@ -150,7 +150,7 @@ class TestFiguresMatplotlib:
                                          fI, fC, r, (0, 0, 2), np.real)
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_call_qc_transform_pairs2(self):
         # plot_transform_pair J2
         r = np.logspace(1, 2, 50)
@@ -161,7 +161,7 @@ class TestFiguresMatplotlib:
                                          fI, [fC, ], r, (0, 0, 2), np.imag)
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_call_qc_transform_pairs3(self):
         # plot_transform_pair Sine/Cosine
         r = np.logspace(1, 2, 50)
@@ -173,7 +173,7 @@ class TestFiguresMatplotlib:
                                          fI, fC, r, (0, 0, 2), np.imag)
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_inversion1(self):
         # plot_inversion minimum amplitude
         f = fdesign.j0_1(5)
@@ -193,7 +193,7 @@ class TestFiguresMatplotlib:
         fdesign._plot_inversion(f, rhs, r, k, imin, spacing, shift, cvar)
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_inversion2(self):
         # plot_inversion maximum r
         f = fdesign.empy_hankel('j2', 50, 100, 1, 1)
