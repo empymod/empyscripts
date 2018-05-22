@@ -13,6 +13,16 @@ This script was heavily inspired by
 - ``ipynbtools.py`` from https://github.com/qutip, and
 - ``watermark.py`` from https://github.com/rasbt/watermark,
 
+Always shown are the OS, number of CPU(s), ``numpy``, ``scipy``, ``empymod``,
+``empyscripts``, ``sys.version``, and time/date.
+
+Additionally shown are, if they can be imported, ``IPython``, ``matplotlib``,
+and ``numexpr``. If ``numexpr`` can be imported it shows additionally VML
+information.
+
+All modules provided in ``add_pckg`` are also shown. They have to be imported
+before ``versions`` is called.
+
 """
 
 # Mandatory modules
