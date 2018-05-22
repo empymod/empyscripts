@@ -111,7 +111,7 @@ def test_load_filter():
                     reason="Plots are slightly different in Python 3.4.")
 class TestFiguresMatplotlib:
 
-    @pytest.mark.mpl_image_compare(tolerance=20, remove_text=True)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_result1(self):
         # Quick run `design` with all verb/plot on, just to check that no
         # errors occur. Actually plots are checked in test below and the other
@@ -124,14 +124,14 @@ class TestFiguresMatplotlib:
         fdesign.plot_result(dat1[1], dat1[2], cvar='amp', prntres=True)
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20, remove_text=True)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_result2(self):
         # plot_result one shift several spacings
         dat5 = DATA['case5'][()]
         fdesign.plot_result(dat5[1], dat5[2])
         return plt.gcf()
 
-    @pytest.mark.mpl_image_compare(tolerance=20, remove_text=True)
+    @pytest.mark.mpl_image_compare(remove_text=True)
     def test_plot_result3(self):
         # plot_result several shifts one spacing for max r
         dat6 = DATA['case6'][()]
