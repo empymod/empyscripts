@@ -1,8 +1,12 @@
 import pytest
 
-from empyscripts import versions, printinfo
+# Optional imports
+try:
+    import IPython
+except ImportError:
+    IPython = False
 
-# Note: Tests assume that there is no IPython in the test environment.
+from empyscripts import versions, printinfo
 
 
 def test_versions(capsys):
@@ -31,7 +35,10 @@ def test_versions(capsys):
 
     # They have to be the same, except time (run at slightly different times)
     assert out3[:-75] == out3b[:-75]
-    assert out3[:-75] == out3c.data[:-75]
+    if IPython:
+        assert out3[:-75] == out3c.data[:-75]
+    else:
+        assert out3c is None
 
     # Check one of the standard packages
     assert 'numpy' in out3
@@ -49,7 +56,10 @@ def test_versions(capsys):
 
     # They have to be the same, except time (run at slightly different times)
     assert out4[:-50] == out4b[:-50]
-    assert out4[:-50] == out4c.data[:-50]
+    if IPython:
+        assert out4[:-50] == out4c.data[:-50]
+    else:
+        assert out4c is None
 
     # Check row of provided package, with number
     teststr = "<td style='background-color: #ccc; border: 2px solid #fff;'>"

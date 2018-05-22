@@ -4,8 +4,13 @@ import pytest
 import numpy as np
 from timeit import default_timer
 from os.path import join, dirname
-from matplotlib import pyplot as plt
 from numpy.testing import assert_allclose
+
+# Optional imports
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    plt = False
 
 from empymod import filters, model
 from empyscripts import fdesign
@@ -101,9 +106,10 @@ def test_load_filter():
             os.remove('./filters/'+name+ending)
 
 
+@pytest.mark.skipif(not plt, reason="Matplotlib not installed.")
 @pytest.mark.skipif(sys.version_info < (3, 5),
                     reason="Plots are slightly different in Python 3.4.")
-class TestFigures:
+class TestFiguresMatplotlib:
 
     @pytest.mark.mpl_image_compare(tolerance=20)
     def test_plot_result1(self):
@@ -209,6 +215,36 @@ class TestFigures:
         imin = np.where(rel_error > 0.01)[0][0]
         fdesign._plot_inversion(f, rhs, r, k, imin, spacing, shift, cvar)
         return plt.gcf()
+
+
+@pytest.mark.skipif(plt, reason="Matplotlib is installed.")
+class TestFiguresNoMatplotlib:
+
+    def test_design(self, capsys):
+        # Check it doesn't fail, message is correct, and input doesn't matter
+        # Same test as first in test_design
+        fI = (fdesign.j0_1(5), fdesign.j1_1(5))
+        dat1 = DATA['case1'][()]
+        _, _ = fdesign.design(fI=fI, verb=1, plot=2, **dat1[0])
+        out, _ = capsys.readouterr()
+        assert "* WARNING :: `matplotlib` is not installed, no " in out
+
+    def test_plot_result(self, capsys):
+        # Check it doesn't fail, message is correct, and input doesn't matter
+        fdesign.plot_result(0, 1)
+        out, _ = capsys.readouterr()
+        assert "* WARNING :: `matplotlib` is not installed, no " in out
+
+    def test_plot_inversion(self, capsys):
+        # Check it doesn't fail, message is correct, and input doesn't matter
+        fdesign._plot_inversion(1, 2, 3, 4, 5, 6, 7, 8)
+        out, _ = capsys.readouterr()
+        assert "* WARNING :: `matplotlib` is not installed, no " in out
+
+    def test_plot_transform_pairs(self, capsys):
+        fdesign._plot_transform_pairs(1, 2, 3, 4)
+        out, _ = capsys.readouterr()
+        assert "* WARNING :: `matplotlib` is not installed, no " in out
 
 
 def test_print_data(capsys):

@@ -223,9 +223,15 @@ import os
 import shelve
 import numpy as np
 from copy import deepcopy as dc
-import matplotlib.pyplot as plt
 from scipy.constants import mu_0
 from scipy.optimize import brute, fmin_powell
+
+# Optional imports
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    plt = False
+    plt_msg = "* WARNING :: `matplotlib` is not installed, no figures shown."
 
 from empymod.filters import DigitalFilter
 from empymod.model import dipole, wavenumber
@@ -351,6 +357,12 @@ def design(n, spacing, shift, fI, fC=False, r=None, r_def=(1, 1, 2), reim=None,
 
     # === 1.  LET'S START ============
     t0 = printstartfinish(verb)
+
+    # Check plot with matplotlib (soft dependency)
+    if plot > 0 and not plt:
+        plot = 0
+        if verb > 0:
+            print(plt_msg)
 
     # Ensure fI, fC are lists
     def check_f(f):
@@ -480,6 +492,10 @@ def plot_result(filt, full, cvar='amp', prntres=True):
     - If prntres is True, it calls fdesign.print_result as well.
 
     """
+    # Check matplotlib (soft dependency)
+    if not plt:
+        print(plt_msg)
+        return
 
     if prntres:
         print_result(filt, full, cvar)
@@ -619,6 +635,12 @@ def _call_qc_transform_pairs(n, ispacing, ishift, fI, fC, r, r_def, reim):
 
 def _plot_transform_pairs(fCI, r, k, tit):
     """Plot the input transform pairs."""
+
+    # Check matplotlib (soft dependency)
+    if not plt:
+        print(plt_msg)
+        return
+
     plt.figure("Transform pairs", figsize=(9.5, 6))
     plt.subplots_adjust(wspace=.3, hspace=.4)
 
@@ -680,6 +702,12 @@ def _plot_transform_pairs(fCI, r, k, tit):
 
 def _plot_inversion(f, rhs, r, k, imin, spacing, shift, cvar):
     """QC the resulting filter."""
+
+    # Check matplotlib (soft dependency)
+    if not plt:
+        print(plt_msg)
+        return
+
     plt.figure("Inversion result "+f.name, figsize=(9.5, 4))
     plt.subplots_adjust(wspace=.3, bottom=0.2)
     plt.clf()

@@ -1,7 +1,6 @@
 ### Without Version Specifiers
 numpy
 empymod >= 1.4.4
-matplotlib
 python-dateutil
 sphinxcontrib-napoleon
 #

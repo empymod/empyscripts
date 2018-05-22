@@ -19,8 +19,11 @@ where:
 CHAN=defaults
 PYTHON3VERSION="4 5 6"
 PRINT="/dev/null"
-PCKGS="numpy scipy python-dateutil setuptools pytest pytest-cov matplotlib"
-NMXPR="numexpr IPython"
+PCKGS="numpy scipy pytest pytest-cov"
+NMXPR="numexpr matplotlib IPython"
+STR2="**  WITH numexpr/matplotlib/IPython  "
+PROPS="--mpl --flake8"
+INST="pytest-flake8 pytest-mpl"
 
 # Get Optional Input
 while getopts "hv:cpn" opt; do
@@ -33,6 +36,11 @@ while getopts "hv:cpn" opt; do
     c) CHAN=conda-forge
        ;;
     p) PRINT="/dev/tty"
+       ;;
+    n) NMXPR=""
+       STR2="**  NO numexpr/matplotlib/IPython  "
+       PROPS="--flake8"
+       INST="pytest-flake8"
        ;;
     :) printf "missing argument for -%s\n" "$OPTARG" >&2
        echo "$usage" >&2
@@ -49,7 +57,7 @@ done
 for i in ${PYTHON3VERSION[@]}; do
 
   # Print info
-  STR="  PYTHON 3."${i}"  **  Channel "$CHAN"  **"
+  STR="  PYTHON 3."${i}"  **  Channel "$CHAN"  $STR2"
   LENGTH=$(( ($(tput cols) - ${#STR}) / 2 - 2 ))
   printf "\n  "
   printf '\e[1m\e[34m%*s' "${LENGTH}" '' | tr ' ' -
@@ -68,13 +76,13 @@ for i in ${PYTHON3VERSION[@]}; do
   source activate test_3${i}
 
   # Install flake8
-  pip install pytest-flake8 pytest-mpl &> $PRINT
+  pip install $INST &> $PRINT
 
   # Install empymod
   conda install -y -c prisae empymod &> $PRINT
 
   # Run tests
-  pytest --cov=empyscripts --mpl --flake8
+  pytest --cov=empyscripts $PROPS
 
   # De-activate venv
   source deactivate test_3${i}

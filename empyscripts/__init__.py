@@ -95,6 +95,8 @@ References |_|
 # License for the specific language governing permissions and limitations under
 # the License.
 
+import warnings
+
 from . import tmtemod
 from . import fdesign
 from .printinfo import versions
@@ -103,3 +105,9 @@ __all__ = ['tmtemod', 'fdesign', 'versions']
 
 # Version
 __version__ = '0.3.2.dev0'
+
+# Deprecation Warning
+msg = "\n\n    empyscripts resides now in empymod.scripts from empymod "
+msg += "v1.7.0 onwards.\n    This is the last version of empyscripts "
+msg += "(v0.3.2), use empymod instead.\n"
+warnings.warn(msg, DeprecationWarning)
