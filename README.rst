@@ -13,6 +13,10 @@ empyscripts
 
 .. sphinx-inclusion-marker
 
+**Note**: ``v0.3.2`` is the *last release* of ``empyscripts``. From ``empymod
+v1.7.0`` onwards ``empyscripts`` is directly included in ``empymod`` as
+``empymod.scripts``.
+
 The **empyscripts** are *add-ons* for the electromagnetic modeller **empymod**.
 These add-ons provide some very specific, additional functionalities:
 
