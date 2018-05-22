@@ -5,13 +5,13 @@ readme = open('README.rst').read()
 
 setup(
     name='empyscripts',
-    version='0.3.2.dev0',
+    version='0.3.2',
     description='Add-ons for empymod',
     long_description=readme,
     author='Dieter Werthmüller',
     author_email='dieter@werthmuller.org',
     url='https://empymod.github.io',
-    download_url='https://github.com/empymod/empyscripts/tarball/v0.3.1',
+    download_url='https://github.com/empymod/empyscripts/tarball/v0.3.2',
     license='Apache License V2.0',
     packages=['empyscripts'],
     classifiers=[

@@ -1,16 +1,6 @@
 empyscripts
 ###########
 
-.. image:: https://readthedocs.org/projects/empyscripts/badge/?version=latest
-   :target: http://empyscripts.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
-.. image:: https://travis-ci.org/empymod/empyscripts.svg?branch=master
-   :target: https://travis-ci.org/empymod/empyscripts
-   :alt: Travis-CI
-.. image:: https://coveralls.io/repos/github/empymod/empyscripts/badge.svg?branch=master
-   :target: https://coveralls.io/github/empymod/empyscripts?branch=master
-   :alt: Coveralls
-
 .. sphinx-inclusion-marker
 
 The **empyscripts** are *add-ons* for the electromagnetic modeller **empymod**.

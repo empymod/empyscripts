@@ -104,7 +104,7 @@ from .printinfo import versions
 __all__ = ['tmtemod', 'fdesign', 'versions']
 
 # Version
-__version__ = '0.3.2.dev0'
+__version__ = '0.3.2'
 
 # Deprecation Warning
 msg = "\n\n    empyscripts resides now in empymod.scripts from empymod "

@@ -7,7 +7,7 @@ v0.3.2 - *2018-05-22*
 Last release of ``empyscripts``. From ``empymod v1.7.0`` onwards
 ``empyscripts`` is included in ``empymod`` as ``empymod.scripts``.
 
-- Make ``matplotlib``, ``IPython``, ``numexpr`` soft dependencies.
+- Make ``matplotlib``, ``IPython``, and ``numexpr`` soft dependencies.
 
 
 v0.3.1 - *2018-02-24*
