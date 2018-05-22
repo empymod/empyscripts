@@ -24,7 +24,7 @@ install:
       INST="";
       TEST="";
     else
-      SOFT_DEP="numexpr matplotlib IPYthon";
+      SOFT_DEP="numexpr matplotlib IPython";
       INST="pytest-mpl";
       TEST="--mpl";
     fi
